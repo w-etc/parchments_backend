@@ -20,6 +20,9 @@ public class Parchment {
     @ManyToOne
     private Writer writer;
 
+    public Parchment() {
+    }
+
     public Parchment(String title, String contents) {
         this.title = title;
         this.contents = contents;
@@ -57,6 +60,13 @@ public class Parchment {
         this.previousParchment = previousParchment;
     }
 
+    public Writer getWriter() {
+        return writer;
+    }
+
+    public void setWriter(Writer writer) {
+        this.writer = writer;
+    }
 
     public void tieTo(Parchment previousParchment) {
         this.previousParchment = previousParchment;

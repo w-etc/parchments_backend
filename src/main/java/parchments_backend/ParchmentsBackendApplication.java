@@ -13,6 +13,8 @@ import parchments_backend.repositories.WriterRepository;
 @SpringBootApplication
 public class ParchmentsBackendApplication {
 
+	private Writer firstWriter;
+
 	@Autowired
 	private WriterRepository writerRepository;
 	@Autowired
@@ -29,7 +31,7 @@ public class ParchmentsBackendApplication {
 	}
 
 	private void seedWritersTable() {
-		Writer firstWriter = new Writer("First", "");
+		firstWriter = new Writer("First", "");
 
 		writerRepository.save(firstWriter);
 	}
@@ -41,6 +43,9 @@ public class ParchmentsBackendApplication {
 
 		chapterIII.tieTo(chapterII);
 		chapterII.tieTo(chapterI);
+
+		chapterI.setWriter(firstWriter);
+		chapterII.setWriter(firstWriter);
 
 		parchmentRepository.save(chapterI);
 		parchmentRepository.save(chapterII);

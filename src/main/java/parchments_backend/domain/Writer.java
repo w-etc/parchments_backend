@@ -18,6 +18,9 @@ public class Writer {
     @OneToMany(mappedBy="writer")
     private Set<Parchment> parchments;
 
+    public Writer() {
+    }
+
     public Writer(String username, String password) {
         this.username = username;
         this.password = password;
