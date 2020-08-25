@@ -1,8 +1,7 @@
 package parchments_backend.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Parchment {
@@ -12,6 +11,11 @@ public class Parchment {
     private Long id;
     private String title;
     private String contents;
+
+    @OneToMany(mappedBy="previousParchment")
+    private Set<Parchment> continuations;
+    @ManyToOne
+    private Parchment previousParchment;
 
     public Parchment(String title, String contents) {
         this.title = title;
@@ -40,5 +44,18 @@ public class Parchment {
 
     public void setContents(String contents) {
         this.contents = contents;
+    }
+
+    public Parchment getPreviousParchment() {
+        return previousParchment;
+    }
+
+    public void setPreviousParchment(Parchment previousParchment) {
+        this.previousParchment = previousParchment;
+    }
+
+
+    public void tieTo(Parchment previousParchment) {
+        this.previousParchment = previousParchment;
     }
 }
