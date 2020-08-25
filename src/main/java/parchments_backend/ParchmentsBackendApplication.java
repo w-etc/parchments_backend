@@ -6,11 +6,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import parchments_backend.domain.Parchment;
+import parchments_backend.domain.Writer;
 import parchments_backend.repositories.ParchmentRepository;
+import parchments_backend.repositories.WriterRepository;
 
 @SpringBootApplication
 public class ParchmentsBackendApplication {
 
+	@Autowired
+	private WriterRepository writerRepository;
 	@Autowired
 	private ParchmentRepository parchmentRepository;
 
@@ -20,7 +24,14 @@ public class ParchmentsBackendApplication {
 
 	@EventListener
 	public void seed(ContextRefreshedEvent event) {
+		seedWritersTable();
 		seedParchmentsTable();
+	}
+
+	private void seedWritersTable() {
+		Writer firstWriter = new Writer("First", "");
+
+		writerRepository.save(firstWriter);
 	}
 
 	private void seedParchmentsTable() {
