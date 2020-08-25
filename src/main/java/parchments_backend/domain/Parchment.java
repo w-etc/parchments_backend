@@ -17,6 +17,9 @@ public class Parchment {
     @ManyToOne
     private Parchment previousParchment;
 
+    @ManyToOne
+    private Writer writer;
+
     public Parchment(String title, String contents) {
         this.title = title;
         this.contents = contents;
