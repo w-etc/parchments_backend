@@ -3,7 +3,7 @@ package parchments_backend.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 public class Parchment {
@@ -14,8 +14,8 @@ public class Parchment {
     private String title;
     private String contents;
 
-    @OneToMany(mappedBy="previousParchment", fetch = FetchType.LAZY)
-    private Set<Parchment> continuations;
+    @OneToMany(mappedBy="previousParchment")
+    private List<Parchment> continuations;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Parchment previousParchment;
