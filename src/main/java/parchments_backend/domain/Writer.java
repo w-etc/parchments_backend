@@ -1,5 +1,7 @@
 package parchments_backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -11,8 +13,10 @@ public class Writer {
 
     @Id
     @GeneratedValue
+    @JsonIgnore
     private Long id;
     private String username;
+    @JsonIgnore
     private String password;
 
     @OneToMany(mappedBy="writer")
