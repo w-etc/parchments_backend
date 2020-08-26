@@ -1,6 +1,8 @@
 package parchments_backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,6 +17,8 @@ public class Parchment {
     private String contents;
 
     @OneToMany(mappedBy="previousParchment")
+    @JsonManagedReference
+    @JsonIgnoreProperties("continuations")
     private List<Parchment> continuations;
 
     @ManyToOne
