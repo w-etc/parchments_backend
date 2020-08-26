@@ -16,7 +16,8 @@ public class Parchment {
 
     @OneToMany(mappedBy="previousParchment")
     private List<Parchment> continuations;
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne
     @JsonIgnore
     private Parchment previousParchment;
 

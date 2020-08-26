@@ -26,7 +26,7 @@ public class ParchmentController {
     }
 
     @GetMapping("/{id}")
-    public @ResponseBody List<Parchment> getParchment(@PathVariable Long id) {
+    public @ResponseBody Parchment getParchment(@PathVariable Long id) {
         return parchmentService.findById(id);
     }
 }

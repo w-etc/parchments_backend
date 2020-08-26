@@ -21,7 +21,7 @@ public class ParchmentService {
         return parchmentRepository.findAllByWriterId(writerId);
     }
 
-    public List<Parchment> findById(Long id) {
+    public Parchment findById(Long id) {
         return parchmentRepository.findById(id);
     }
 }

@@ -12,5 +12,5 @@ public interface ParchmentRepository extends CrudRepository<Parchment, Integer> 
 
     List<Parchment> findAllByWriterId(Long writerId);
 
-    List<Parchment> findById(Long id);
+    Parchment findById(Long id);
 }
