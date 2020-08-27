@@ -10,6 +10,10 @@ import parchments_backend.domain.Writer;
 import parchments_backend.repositories.ParchmentRepository;
 import parchments_backend.repositories.WriterRepository;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 @SpringBootApplication
 public class ParchmentsBackendApplication {
 
@@ -31,21 +35,31 @@ public class ParchmentsBackendApplication {
 	}
 
 	private void seedWritersTable() {
+		List<Writer> presentWriters = writerRepository.findAll();
+		if (presentWriters.size() >= 1) {
+			return;
+		}
+
 		firstWriter = new Writer("First", "");
 
 		writerRepository.save(firstWriter);
 	}
 
 	private void seedParchmentsTable() {
+		List<Parchment> presentParchments = parchmentRepository.findAll();
+		if (presentParchments.size() >= 3) {
+			return;
+		}
+
 		Parchment chapterI = new Parchment("Chapter I", "");
 		Parchment chapterII = new Parchment("Chapter II", "");
 		Parchment chapterIII = new Parchment("Chapter III", "");
 
-		chapterIII.tieTo(chapterII);
-		chapterII.tieTo(chapterI);
+		chapterI.setContinuations(Collections.singletonList(chapterII));
+		chapterII.setContinuations(Collections.singletonList(chapterIII));
 
-		chapterI.setWriter(firstWriter);
-		chapterII.setWriter(firstWriter);
+		firstWriter.setParchments(Arrays.asList(chapterI, chapterII));
+		writerRepository.save(firstWriter);
 
 		parchmentRepository.save(chapterI);
 		parchmentRepository.save(chapterII);

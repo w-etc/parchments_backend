@@ -1,32 +1,26 @@
 package parchments_backend.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.neo4j.ogm.annotation.GeneratedValue;
+import org.neo4j.ogm.annotation.Id;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 
-import javax.persistence.*;
 import java.util.List;
 
-@Entity
+@NodeEntity
 public class Parchment {
 
     @Id
     @GeneratedValue
     private Long id;
+    private Long writerId;
     private String title;
     private String contents;
 
-    @OneToMany(mappedBy="previousParchment")
-    @JsonManagedReference
     @JsonIgnoreProperties("continuations")
+    @Relationship(type = "CONTINUATION")
     private List<Parchment> continuations;
-
-    @ManyToOne
-    @JsonIgnore
-    private Parchment previousParchment;
-
-    @ManyToOne
-    private Writer writer;
 
     public Parchment() {
     }
@@ -60,23 +54,11 @@ public class Parchment {
         this.contents = contents;
     }
 
-    public Parchment getPreviousParchment() {
-        return previousParchment;
+    public List<Parchment> getContinuations() {
+        return continuations;
     }
 
-    public void setPreviousParchment(Parchment previousParchment) {
-        this.previousParchment = previousParchment;
-    }
-
-    public Writer getWriter() {
-        return writer;
-    }
-
-    public void setWriter(Writer writer) {
-        this.writer = writer;
-    }
-
-    public void tieTo(Parchment previousParchment) {
-        this.previousParchment = previousParchment;
+    public void setContinuations(List<Parchment> continuations) {
+        this.continuations = continuations;
     }
 }

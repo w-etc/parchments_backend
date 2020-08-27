@@ -1,26 +1,23 @@
 package parchments_backend.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.neo4j.ogm.annotation.GeneratedValue;
+import org.neo4j.ogm.annotation.Id;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.util.Set;
+import java.util.List;
 
-@Entity
+@NodeEntity
 public class Writer {
 
     @Id
     @GeneratedValue
-    @JsonIgnore
     private Long id;
     private String username;
-    @JsonIgnore
     private String password;
 
-    @OneToMany(mappedBy="writer")
-    private Set<Parchment> parchments;
+    @Relationship(type = "WROTE")
+    private List<Parchment> parchments;
 
     public Writer() {
     }
@@ -52,5 +49,13 @@ public class Writer {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Parchment> getParchments() {
+        return parchments;
+    }
+
+    public void setParchments(List<Parchment> parchments) {
+        this.parchments = parchments;
     }
 }
