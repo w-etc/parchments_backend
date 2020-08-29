@@ -14,7 +14,6 @@ public class Parchment {
     @Id
     @GeneratedValue
     private Long id;
-    private Long writerId;
     private String title;
     private String contents;
 

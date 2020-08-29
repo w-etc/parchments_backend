@@ -22,6 +22,6 @@ public class ParchmentService {
     }
 
     public Parchment findById(Long id) {
-        return parchmentRepository.findById(id);
+        return parchmentRepository.findById(id).get();
     }
 }
