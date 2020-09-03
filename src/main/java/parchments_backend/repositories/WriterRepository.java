@@ -11,4 +11,6 @@ public interface WriterRepository extends Neo4jRepository<Writer, Integer> {
     <S extends Writer> S save(S s);
 
     List<Writer> findAll();
+
+    Writer findByUsername(String name);
 }
