@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import parchments_backend.domain.Parchment;
 import parchments_backend.services.ParchmentService;
+import parchments_backend.wrappers.ParchmentPostData;
+
 import java.util.List;
 
 @Controller
@@ -15,8 +17,8 @@ public class ParchmentController {
     private ParchmentService parchmentService;
 
     @PostMapping
-    public @ResponseBody String saveParchment(@RequestBody Parchment parchment) {
-        parchmentService.save(parchment);
+    public @ResponseBody String saveParchment(@RequestBody ParchmentPostData postData) {
+        parchmentService.save(postData.parchment, postData.writerId);
         return "Success!";
     }
 
