@@ -18,7 +18,7 @@ public class ParchmentController {
 
     @PostMapping
     public @ResponseBody String saveParchment(@RequestBody ParchmentPostData postData) {
-        parchmentService.save(postData.parchment, postData.writerId);
+        parchmentService.save(postData.parchment, postData.writerId, postData.previousParchmentId);
         return "Success!";
     }
 

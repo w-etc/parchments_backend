@@ -13,9 +13,9 @@ public class ParchmentService {
     @Autowired
     private ParchmentRepository parchmentRepository;
 
-    public void save(Parchment parchment, Long writerId) {
+    public void save(Parchment parchment, Long writerId, Long previousParchmentId) {
         try {
-            parchmentRepository.save(parchment, writerId);
+            parchmentRepository.save(parchment, writerId, previousParchmentId);
         } catch (Exception e) {
             // TODO: Handle this with a custom exception
             System.out.println(e.getMessage());
