@@ -13,13 +13,15 @@ public class ParchmentService {
     @Autowired
     private ParchmentRepository parchmentRepository;
 
-    public void save(Parchment parchment, Long writerId, Long previousParchmentId) {
+    public Parchment save(Parchment parchment, Long writerId, Long previousParchmentId) {
+        Parchment createdParchment = null;
         try {
-            parchmentRepository.save(parchment, writerId, previousParchmentId);
+            createdParchment = parchmentRepository.save(parchment, writerId, previousParchmentId);
         } catch (Exception e) {
             // TODO: Handle this with a custom exception
             System.out.println(e.getMessage());
         }
+        return createdParchment;
     }
 
     public List<Parchment> findAllByWriterId(Long writerId) {
