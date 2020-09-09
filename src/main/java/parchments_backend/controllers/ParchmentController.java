@@ -27,11 +27,6 @@ public class ParchmentController {
         return parchmentService.findAllByWriterId(writerId);
     }
 
-    @GetMapping("/{parchmentId}/continuations")
-    public @ResponseBody List<Parchment> getContinuations(@PathVariable Long parchmentId) {
-        return parchmentService.findAllByParentParchmentId(parchmentId);
-    }
-
     @GetMapping("/{id}")
     public @ResponseBody Parchment getParchment(@PathVariable Long id) {
         return parchmentService.findById(id);

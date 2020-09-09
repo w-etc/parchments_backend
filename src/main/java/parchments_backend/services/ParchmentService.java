@@ -31,8 +31,4 @@ public class ParchmentService {
     public Parchment findById(Long id) {
         return parchmentRepository.findById(id).get();
     }
-
-    public List<Parchment> findAllByParentParchmentId(Long parchmentId) {
-        return parchmentRepository.findAllByParentParchmentId(parchmentId);
-    }
 }
