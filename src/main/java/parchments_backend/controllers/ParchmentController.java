@@ -17,9 +17,9 @@ public class ParchmentController {
     private ParchmentService parchmentService;
 
     @PostMapping
-    public @ResponseBody Long saveParchment(@RequestBody ParchmentPostData postData) {
+    public @ResponseBody Parchment saveParchment(@RequestBody ParchmentPostData postData) {
         Parchment createdParchment = parchmentService.save(postData.parchment, postData.writerId, postData.previousParchmentId);
-        return createdParchment.getId();
+        return createdParchment;
     }
 
     @GetMapping
