@@ -6,6 +6,7 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NodeEntity
@@ -19,7 +20,7 @@ public class Parchment {
 
     @JsonIgnoreProperties("continuations")
     @Relationship(type = "CONTINUATION")
-    private List<Parchment> continuations;
+    private List<Parchment> continuations = new ArrayList<>();
 
     public Parchment() {
     }
