@@ -18,4 +18,7 @@ public interface ParchmentRepository extends Neo4jRepository<Parchment, Long> {
     Optional<Parchment> findById(Long id);
 
     List<Parchment> findAll();
+
+    @Query("MATCH (pre:Parchment)-[:CONTINUATION]->(p:Parchment) WHERE id(pre) = $parchmentId return p")
+    List<Parchment> findAllByParentParchmentId(Long parchmentId);
 }
