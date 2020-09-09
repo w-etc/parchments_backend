@@ -22,6 +22,10 @@ public class Parchment {
     @Relationship(type = "CONTINUATION")
     private List<Parchment> continuations = new ArrayList<>();
 
+    @JsonIgnoreProperties({"title", "contents", "continuations", "parentParchment"})
+    @Relationship(type = "CONTINUATION", direction = Relationship.INCOMING)
+    private Parchment parentParchment;
+
     public Parchment() {
     }
 
@@ -60,5 +64,13 @@ public class Parchment {
 
     public void setContinuations(List<Parchment> continuations) {
         this.continuations = continuations;
+    }
+
+    public Parchment getParentParchment() {
+        return parentParchment;
+    }
+
+    public void setParentParchment(Parchment parentParchment) {
+        this.parentParchment = parentParchment;
     }
 }
