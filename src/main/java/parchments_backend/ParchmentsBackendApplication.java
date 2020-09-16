@@ -1,10 +1,11 @@
 package parchments_backend;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 import parchments_backend.domain.Parchment;
 import parchments_backend.domain.Writer;
 import parchments_backend.repositories.ParchmentRepository;
@@ -16,20 +17,23 @@ import java.util.List;
 
 @SpringBootApplication
 public class ParchmentsBackendApplication {
+	public static void main(String[] args) {
+		SpringApplication.run(ParchmentsBackendApplication.class, args);
+	}
+}
 
+@Component
+class DataLoader implements ApplicationRunner {
 	private Writer firstWriter;
 
 	@Autowired
 	private WriterRepository writerRepository;
+
 	@Autowired
 	private ParchmentRepository parchmentRepository;
 
-	public static void main(String[] args) {
-		SpringApplication.run(ParchmentsBackendApplication.class, args);
-	}
 
-	@EventListener
-	public void seed(ContextRefreshedEvent event) {
+	public void run(ApplicationArguments args) {
 		seedWritersTable();
 		seedParchmentsTable();
 	}
