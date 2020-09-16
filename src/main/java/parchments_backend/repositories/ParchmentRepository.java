@@ -9,6 +9,9 @@ import java.util.Optional;
 
 public interface ParchmentRepository extends Neo4jRepository<Parchment, Long> {
 
+    @Query("MATCH (w:Writer) WHERE id(w) = $writerId CREATE (w)-[:WROTE]->(p:Parchment{title:$s.title, contents:$s.contents}) RETURN p")
+    Parchment save(Parchment s, Long writerId);
+
     @Query("MATCH (w:Writer) WHERE id(w) = $writerId MATCH (pre:Parchment) WHERE id(pre) = $previousParchmentId CREATE (w)-[:WROTE]->(p:Parchment{title:$s.title, contents:$s.contents})<-[:CONTINUATION]-(pre) RETURN p")
     Parchment save(Parchment s, Long writerId, Long previousParchmentId);
 
