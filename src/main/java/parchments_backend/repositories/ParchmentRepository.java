@@ -20,5 +20,7 @@ public interface ParchmentRepository extends Neo4jRepository<Parchment, Long> {
 
     Optional<Parchment> findById(Long id);
 
+    Optional<Parchment> findByTitle(String title);
+
     List<Parchment> findAll();
 }

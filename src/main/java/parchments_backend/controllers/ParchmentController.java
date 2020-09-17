@@ -1,6 +1,8 @@
 package parchments_backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import parchments_backend.domain.Parchment;
@@ -17,9 +19,15 @@ public class ParchmentController {
     private ParchmentService parchmentService;
 
     @PostMapping
-    public @ResponseBody Parchment saveParchment(@RequestBody ParchmentPostData postData) {
-        Parchment createdParchment = parchmentService.save(postData.parchment, postData.writerId, postData.previousParchmentId);
-        return createdParchment;
+    public @ResponseBody ResponseEntity<Object> saveParchment(@RequestBody ParchmentPostData postData) {
+        try {
+            return ResponseEntity.ok(parchmentService.save(postData.parchment, postData.writerId, postData.previousParchmentId));
+        } catch (Exception e) {
+            if (e.getMessage().equals(ParchmentService.MUST_SPECIFY_A_WRITER_FOR_THIS_PARCHMENT)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     @GetMapping
@@ -28,7 +36,14 @@ public class ParchmentController {
     }
 
     @GetMapping("/{id}")
-    public @ResponseBody Parchment getParchment(@PathVariable Long id) {
-        return parchmentService.findById(id);
+    public @ResponseBody ResponseEntity<Object> getParchment(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(parchmentService.findById(id));
+        } catch (Exception e) {
+            if (e.getMessage().equals(ParchmentService.WRITER_DOES_NOT_EXIST)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 }

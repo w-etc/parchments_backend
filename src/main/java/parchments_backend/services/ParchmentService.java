@@ -10,18 +10,23 @@ import java.util.List;
 @Service
 public class ParchmentService {
 
+    public static final String MUST_SPECIFY_A_WRITER_FOR_THIS_PARCHMENT = "You must specify a writer for this Parchment";
+    public static final String WRITER_DOES_NOT_EXIST = "The writer does not exist";
     @Autowired
     private ParchmentRepository parchmentRepository;
 
     public Parchment save(Parchment parchment, Long writerId, Long previousParchmentId) {
-        Parchment createdParchment = null;
-        try {
-            createdParchment = parchmentRepository.save(parchment, writerId, previousParchmentId);
-        } catch (Exception e) {
-            // TODO: Handle this with a custom exception
-            System.out.println(e.getMessage());
+        if (writerId == null) {
+            throw new RuntimeException(MUST_SPECIFY_A_WRITER_FOR_THIS_PARCHMENT);
         }
-        return createdParchment;
+        try {
+            if (previousParchmentId != null) {
+                return parchmentRepository.save(parchment, writerId, previousParchmentId);
+            }
+            return parchmentRepository.save(parchment, writerId);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     public List<Parchment> findAllByWriterId(Long writerId) {
@@ -29,6 +34,10 @@ public class ParchmentService {
     }
 
     public Parchment findById(Long id) {
-        return parchmentRepository.findById(id).get();
+        try {
+            return parchmentRepository.findById(id).get();
+        } catch (Exception e) {
+            throw new RuntimeException(WRITER_DOES_NOT_EXIST);
+        }
     }
 }
