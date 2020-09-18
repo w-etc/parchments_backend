@@ -8,11 +8,15 @@ import parchments_backend.repositories.WriterRepository;
 @Service
 public class WriterService {
 
+    public static final String WRITER_NOT_FOUND = "Writer not found";
     @Autowired
     private WriterRepository writerRepository;
 
     public Long findWriterId(String writerName) {
         Writer writer = writerRepository.findByUsername(writerName);
+        if (writer == null) {
+            throw new RuntimeException(WRITER_NOT_FOUND);
+        }
         return writer.getId();
     }
 }
