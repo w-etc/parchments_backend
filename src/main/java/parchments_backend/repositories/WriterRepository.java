@@ -16,6 +16,6 @@ public interface WriterRepository extends Neo4jRepository<Writer, Integer> {
 
     Writer findByUsername(String name);
 
-    @Query("MATCH (w:Writer) WHERE w.username = $name RETURN w.username, w.password")
+    @Query("MATCH (w:Writer) WHERE w.username = $name RETURN w")
     Optional<Writer> findAuthenticatedUser(String name);
 }
