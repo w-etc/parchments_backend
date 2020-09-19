@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import parchments_backend.domain.WriterDto;
 import parchments_backend.services.WriterService;
 
 @Controller
@@ -24,5 +25,11 @@ public class WriterController {
             }
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/signup")
+    public @ResponseBody ResponseEntity<Object> register(@RequestBody WriterDto writerDto) {
+        writerService.register(writerDto);
+        return ResponseEntity.ok("Success!");
     }
 }
