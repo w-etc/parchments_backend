@@ -15,6 +15,7 @@ import parchments_backend.domain.JwtRequest;
 import parchments_backend.domain.JwtResponse;
 import parchments_backend.domain.WriterDto;
 import parchments_backend.services.WriterService;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping(path="/writer")
@@ -42,7 +43,7 @@ public class WriterController {
     }
 
     @PostMapping("/register")
-    public @ResponseBody ResponseEntity<Object> register(@RequestBody WriterDto writerDto) {
+    public @ResponseBody ResponseEntity<Object> register(@Valid @RequestBody WriterDto writerDto) {
         UserDetails userDetails = writerService.register(writerDto);
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
