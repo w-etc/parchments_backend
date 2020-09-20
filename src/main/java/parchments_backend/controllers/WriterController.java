@@ -41,10 +41,11 @@ public class WriterController {
         }
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public @ResponseBody ResponseEntity<Object> register(@RequestBody WriterDto writerDto) {
-        writerService.register(writerDto);
-        return ResponseEntity.ok("Success!");
+        UserDetails userDetails = writerService.register(writerDto);
+        final String token = jwtTokenUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new JwtResponse(token));
     }
 
     @PostMapping("/login")

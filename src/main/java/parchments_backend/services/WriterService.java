@@ -12,6 +12,7 @@ import parchments_backend.domain.WriterDto;
 import parchments_backend.repositories.WriterRepository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -33,17 +34,10 @@ public class WriterService implements UserDetailsService {
         return writer.getId();
     }
 
-    public Writer register(WriterDto writerDto) {
-        Writer writer = new Writer();
-        writer.setUsername(writerDto.getUsername());
-        writer.setPassword(passwordEncoder.encode(writerDto.getPassword()));
-        return writerRepository.save(writer);
-    }
-
-    public boolean login(WriterDto writerDto) {
+    public UserDetails register(WriterDto writerDto) {
         String encodedPassword = passwordEncoder.encode(writerDto.getPassword());
-        UserDetails userDetails = loadUserByUsername(writerDto.getUsername());
-        return userDetails.getPassword().equals(encodedPassword);
+        writerRepository.save(new Writer(writerDto.getUsername(), encodedPassword));
+        return new User(writerDto.getUsername(), encodedPassword, Collections.emptyList());
     }
 
     @Override
