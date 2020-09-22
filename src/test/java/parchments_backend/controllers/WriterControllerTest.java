@@ -39,25 +39,6 @@ public class WriterControllerTest {
     }
 
     @Test
-    void get_writer_id_returns_bad_request_when_the_writer_name_does_not_exist() throws Exception {
-        String nonExistantName = "Non-existant name";
-
-        mvc.perform(get("/writer/" + nonExistantName).header("Authorization", "Bearer " + token))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", comparesEqualTo(WriterService.WRITER_NOT_FOUND)));
-    }
-
-    @Test
-    void get_writer_id_returns_a_writer_id_by_name() throws Exception {
-        String name = "Distinct Name";
-        Writer writer = writerRepository.save(new Writer(name, "password"));
-
-        mvc.perform(get("/writer/" + name).header("Authorization", "Bearer " + token))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", comparesEqualTo(Math.toIntExact(writer.getId()))));
-    }
-
-    @Test
     void register_returns_a_400_when_username_and_password_are_not_in_the_body() throws Exception {
         mvc.perform(post("/writer/register"))
                 .andExpect(status().isBadRequest());

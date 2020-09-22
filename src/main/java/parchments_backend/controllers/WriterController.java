@@ -30,18 +30,6 @@ public class WriterController {
     @Autowired
     private WriterService writerService;
 
-    @GetMapping("/{writerName}")
-    public @ResponseBody ResponseEntity<Object> getWriterId(@PathVariable String writerName) {
-        try {
-            return ResponseEntity.ok(writerService.findWriterId(writerName));
-        } catch (Exception e) {
-            if (e.getMessage().equals(WriterService.WRITER_NOT_FOUND)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-            }
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
     @PostMapping("/register")
     public @ResponseBody ResponseEntity<Object> register(@Valid @RequestBody WriterDto writerDto) {
         UserDetails userDetails = writerService.register(writerDto);

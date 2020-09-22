@@ -3,11 +3,13 @@ package parchments_backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import parchments_backend.domain.Parchment;
 import parchments_backend.services.ParchmentService;
 import parchments_backend.wrappers.ParchmentPostData;
+import parchments_backend.wrappers.WriterUser;
 
 import java.util.List;
 
@@ -21,7 +23,9 @@ public class ParchmentController {
     @PostMapping
     public @ResponseBody ResponseEntity<Object> saveParchment(@RequestBody ParchmentPostData postData) {
         try {
-            return ResponseEntity.ok(parchmentService.save(postData.parchment, postData.writerId, postData.previousParchmentId));
+            WriterUser user = (WriterUser) SecurityContextHolder.getContext().getAuthentication()
+                    .getPrincipal();
+            return ResponseEntity.ok(parchmentService.save(postData.parchment, user.getId(), postData.previousParchmentId));
         } catch (Exception e) {
             if (e.getMessage().equals(ParchmentService.MUST_SPECIFY_A_WRITER_FOR_THIS_PARCHMENT)) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

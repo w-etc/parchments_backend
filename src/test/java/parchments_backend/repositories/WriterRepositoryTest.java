@@ -23,14 +23,6 @@ public class WriterRepositoryTest {
     }
 
     @Test
-    void a_writer_can_be_retrieved_by_username() {
-        Writer writer = writerRepository.save(new Writer("username", "password"));
-        Writer retrievedWriter = writerRepository.findByUsername(writer.getUsername());
-
-        assertThat(writer.getId()).isEqualTo(retrievedWriter.getId());
-    }
-
-    @Test
     void all_writers_can_be_retrieved() {
         Writer firstWriter = writerRepository.save(new Writer("username", "password"));
         Writer secondWriter = writerRepository.save(new Writer("otherUsername", "password"));
