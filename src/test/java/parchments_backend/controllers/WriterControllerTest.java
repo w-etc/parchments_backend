@@ -83,4 +83,39 @@ public class WriterControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", notNullValue()));
     }
+
+    @Test
+    void check_valid_username_returns_true_if_the_username_is_free_to_use() throws Exception {
+        mvc.perform(post("/writer/check")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\": \"user\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", comparesEqualTo(true)));
+    }
+
+    @Test
+    void check_valid_username_returns_false_if_the_username_is_taken() throws Exception {
+        String username = "username";
+        writerRepository.save(new Writer(username, "password"));
+        mvc.perform(post("/writer/check")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\": \"" + username + "\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", comparesEqualTo(false)));
+    }
+
+    @Test
+    void check_valid_username_returns_400_if_no_username_is_provided() throws Exception {
+        mvc.perform(post("/writer/check")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void check_valid_username_returns_400_if_an_empty_username_is_provided() throws Exception {
+        mvc.perform(post("/writer/check")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\": \"\"}"))
+                .andExpect(status().isBadRequest());
+    }
 }

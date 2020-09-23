@@ -30,6 +30,10 @@ public class WriterService implements UserDetailsService {
         return new User(writerDto.getUsername(), encodedPassword, Collections.emptyList());
     }
 
+    public boolean checkValidUsername(String username) {
+        return writerRepository.checkValidUsername(username);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Writer> optionalWriter = writerRepository.findAuthenticatedUser(username);
