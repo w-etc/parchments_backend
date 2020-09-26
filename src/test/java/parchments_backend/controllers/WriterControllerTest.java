@@ -7,14 +7,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import parchments_backend.ControllerTestFactory;
 import parchments_backend.domain.Writer;
 import parchments_backend.repositories.WriterRepository;
-import parchments_backend.services.WriterService;
 
 import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,13 +27,6 @@ public class WriterControllerTest {
 
     @Autowired
     private WriterRepository writerRepository;
-
-    String token;
-
-    @BeforeAll
-    void setUpAll() throws Exception {
-        token = ControllerTestFactory.getUserToken(mvc);
-    }
 
     @Test
     void register_returns_a_400_when_username_and_password_are_not_in_the_body() throws Exception {
@@ -69,7 +59,7 @@ public class WriterControllerTest {
 
     @Test
     void login_returns_a_400_when_username_and_password_are_empty() throws Exception {
-        mvc.perform(post("/writer/register")
+        mvc.perform(post("/writer/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\": \"\", \"password\": \"\"}"))
                 .andExpect(status().isBadRequest());
@@ -77,9 +67,15 @@ public class WriterControllerTest {
 
     @Test
     void login_returns_a_token_on_successful_case() throws Exception {
+        String username = "username";
+        String password = "password";
         mvc.perform(post("/writer/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"username\": \"user\", \"password\": \"password\"}"))
+                .content("{\"username\": \"" + username + "\", \"password\": \"" + password + "\"}"));
+
+        mvc.perform(post("/writer/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\": \"" + username + "\", \"password\": \"" + password + "\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", notNullValue()));
     }
