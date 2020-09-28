@@ -40,4 +40,8 @@ public class ParchmentService {
             throw new RuntimeException(WRITER_DOES_NOT_EXIST);
         }
     }
+
+    public List<Parchment> findCoreParchments() {
+        return parchmentRepository.findCoreParchments();
+    }
 }

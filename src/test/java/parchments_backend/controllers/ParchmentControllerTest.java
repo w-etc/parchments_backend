@@ -4,10 +4,12 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import parchments_backend.ControllerTestFactory;
+import parchments_backend.DataLoader;
 import parchments_backend.domain.Parchment;
 import parchments_backend.domain.Writer;
 import parchments_backend.repositories.ParchmentRepository;
@@ -27,6 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 public class ParchmentControllerTest {
+
+    @MockBean
+    private DataLoader dataLoader;
 
     @Autowired
     private MockMvc mvc;
@@ -132,6 +137,28 @@ public class ParchmentControllerTest {
 //        mvc.perform(post("/parchment").contentType(MediaType.APPLICATION_JSON).content(json).header("Authorization", "Bearer " + token))
 //                .andExpect(status().isBadRequest());
 //    }
+
+    @Test
+    void get_core_parchments_brings_parchments_without_parent() throws Exception {
+        Parchment parchment = getParchment();
+        mvc.perform(get("/parchment/core").header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", comparesEqualTo(Math.toIntExact(parchment.getId()))));
+    }
+
+    @Test
+    void get_core_parchments_does_not_bring_parchments_with_parent() throws Exception {
+        Parchment coreParchment = getParchment();
+        Writer writer = getWriter();
+        Parchment parchment = parchmentRepository.save(new Parchment("Title", "Contents"), writer.getId(), coreParchment.getId());
+
+        mvc.perform(get("/parchment/core").header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", comparesEqualTo(Math.toIntExact(coreParchment.getId()))))
+                .andExpect(jsonPath("$[0].id", not(comparesEqualTo(Math.toIntExact(parchment.getId())))));
+    }
 
     private Writer getWriter() {
         return writerRepository.save(new Writer("username", "password"));

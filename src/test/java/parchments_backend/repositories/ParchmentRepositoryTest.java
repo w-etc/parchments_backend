@@ -103,6 +103,26 @@ public class ParchmentRepositoryTest {
         assertThat(retrievedParchment).isNotPresent();
     }
 
+    @Test
+    void brings_in_core_parchments_a_parchment_without_parent() {
+        Parchment parchment = saveParchment("Title", writer, null);
+        List<Parchment> parchments = parchmentRepository.findCoreParchments();
+
+        assertThat(parchments.size()).isEqualTo(1);
+        assertThat(parchments.get(0).getId()).isEqualTo(parchment.getId());
+    }
+
+    @Test
+    void does_not_bring_in_core_parchments_a_parchment_with_parent() {
+        Parchment coreParchment = saveParchment("Title", writer, null);
+        Parchment parchment = saveParchment("Title", writer, coreParchment);
+        List<Parchment> parchments = parchmentRepository.findCoreParchments();
+
+        assertThat(parchments.size()).isEqualTo(1);
+        assertThat(parchments.get(0).getId()).isNotEqualTo(parchment.getId());
+        assertThat(parchments.get(0).getId()).isEqualTo(coreParchment.getId());
+    }
+
     private Parchment saveParchment(String title, Writer writer, Parchment previousParchment) {
         Parchment parchment = new Parchment(title, "contents");
         if (previousParchment != null) {

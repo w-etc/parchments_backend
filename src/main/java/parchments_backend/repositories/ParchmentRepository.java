@@ -18,6 +18,9 @@ public interface ParchmentRepository extends Neo4jRepository<Parchment, Long> {
     @Query("MATCH (w:Writer)-[wr:WROTE]->(p:Parchment) WHERE id(w) = $writerId return p")
     List<Parchment> findAllByWriterId(Long writerId);
 
+    @Query("MATCH (p:Parchment) WHERE NOT (p)<-[:CONTINUATION]-(:Parchment) RETURN p")
+    List<Parchment> findCoreParchments();
+
     Optional<Parchment> findById(Long id);
 
     Optional<Parchment> findByTitle(String title);
