@@ -59,4 +59,16 @@ public class ParchmentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+    @GetMapping("/core/random")
+    public @ResponseBody ResponseEntity<Object> getRandomCoreParchment() {
+        try {
+            return ResponseEntity.ok(parchmentService.findRandomCoreParchment());
+        } catch (Exception e) {
+            if (e.getMessage().equals(ParchmentService.WRITER_DOES_NOT_EXIST)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }

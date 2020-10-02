@@ -21,6 +21,9 @@ public interface ParchmentRepository extends Neo4jRepository<Parchment, Long> {
     @Query("MATCH (p:Parchment) WHERE NOT (p)<-[:CONTINUATION]-(:Parchment) RETURN p")
     List<Parchment> findCoreParchments();
 
+    @Query("MATCH (p:Parchment) WHERE NOT (p)<-[:CONTINUATION]-(:Parchment) RETURN p, rand() as r ORDER BY r LIMIT 1")
+    Optional<Parchment> findRandomCoreParchment();
+
     Optional<Parchment> findById(Long id);
 
     Optional<Parchment> findByTitle(String title);

@@ -12,6 +12,7 @@ public class ParchmentService {
 
     public static final String MUST_SPECIFY_A_WRITER_FOR_THIS_PARCHMENT = "You must specify a writer for this Parchment";
     public static final String WRITER_DOES_NOT_EXIST = "The writer does not exist";
+    public static final String PARCHMENT_DOES_NOT_EXIST = "The parchment does not exist";
     @Autowired
     private ParchmentRepository parchmentRepository;
 
@@ -43,5 +44,13 @@ public class ParchmentService {
 
     public List<Parchment> findCoreParchments() {
         return parchmentRepository.findCoreParchments();
+    }
+
+    public Parchment findRandomCoreParchment() {
+        try {
+            return parchmentRepository.findRandomCoreParchment().get();
+        } catch (Exception e) {
+            throw new RuntimeException(PARCHMENT_DOES_NOT_EXIST);
+        }
     }
 }
