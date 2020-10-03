@@ -42,18 +42,11 @@ public class ParchmentControllerTest {
     @Autowired
     private ParchmentRepository parchmentRepository;
 
-    String token;
-
-    @BeforeEach
-    void setUp() throws Exception {
-        token = ControllerTestFactory.getUserToken(mvc);
-    }
-
     @Test
     void get_parchments_by_writer_id_brings_an_empty_list_of_parchments_when_the_writer_does_not_exist() throws Exception {
         int nonExistantId = 100;
 
-        mvc.perform(get("/parchment?writerId=" + nonExistantId).header("Authorization", "Bearer " + token))
+        mvc.perform(get("/parchment?writerId=" + nonExistantId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
     }
@@ -62,7 +55,7 @@ public class ParchmentControllerTest {
     void get_parchments_by_writer_id_brings_an_empty_list_of_parchments_when_the_writer_has_nothing_written() throws Exception {
         Writer writer = getWriter();
 
-        mvc.perform(get("/parchment?writerId=" + writer.getId()).header("Authorization", "Bearer " + token))
+        mvc.perform(get("/parchment?writerId=" + writer.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
     }
@@ -72,7 +65,7 @@ public class ParchmentControllerTest {
         Writer writer = getWriter();
         parchmentRepository.save(new Parchment("Title", "Contents"), writer.getId());
 
-        mvc.perform(get("/parchment?writerId=" + writer.getId()).header("Authorization", "Bearer " + token))
+        mvc.perform(get("/parchment?writerId=" + writer.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
     }
@@ -81,7 +74,7 @@ public class ParchmentControllerTest {
     void get_parchment_by_id_brings_a_parchment_by_id() throws Exception {
         Parchment parchment = getParchment();
 
-        mvc.perform(get("/parchment/" + parchment.getId()).header("Authorization", "Bearer " + token))
+        mvc.perform(get("/parchment/" + parchment.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", comparesEqualTo(Math.toIntExact(parchment.getId()))))
                 .andExpect(jsonPath("$.title", comparesEqualTo(parchment.getTitle())))
@@ -92,13 +85,14 @@ public class ParchmentControllerTest {
 
     @Test
     void get_parchment_by_id_returns_bad_request_if_the_parchment_does_not_exist() throws Exception {
-        mvc.perform(get("/parchment/1").header("Authorization", "Bearer " + token))
+        mvc.perform(get("/parchment/1"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$", comparesEqualTo(ParchmentService.WRITER_DOES_NOT_EXIST)));
     }
 
     @Test
     void create_parchment_creates_a_parchment_without_parent_parchment() throws Exception {
+        String token = ControllerTestFactory.getUserToken(mvc);
         String title = "Recognizable title";
         String json = "{\"parchment\": {\"title\": \"" + title + "\", \"contents\": \"\"}}";
         mvc.perform(post("/parchment").contentType(MediaType.APPLICATION_JSON).content(json).header("Authorization", "Bearer " + token))
@@ -111,6 +105,7 @@ public class ParchmentControllerTest {
 
     @Test
     void create_parchment_creates_a_parchment_with_parent_parchment() throws Exception {
+        String token = ControllerTestFactory.getUserToken(mvc);
         Parchment parentParchment = getParchment();
         String title = "Recognizable title";
         String json = "{\"parchment\": {\"title\": \"" + title + "\", \"contents\": \"\"}, \"previousParchmentId\": " + parentParchment.getId() + "}";
@@ -126,6 +121,7 @@ public class ParchmentControllerTest {
 
     @Test
     void create_parchment_does_not_create_a_parchment_when_no_body_is_sent() throws Exception {
+        String token = ControllerTestFactory.getUserToken(mvc);
         mvc.perform(post("/parchment").header("Authorization", "Bearer " + token))
                 .andExpect(status().isBadRequest());
     }
@@ -141,7 +137,7 @@ public class ParchmentControllerTest {
     @Test
     void get_core_parchments_brings_parchments_without_parent() throws Exception {
         Parchment parchment = getParchment();
-        mvc.perform(get("/parchment/core").header("Authorization", "Bearer " + token))
+        mvc.perform(get("/parchment/core"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id", comparesEqualTo(Math.toIntExact(parchment.getId()))));
@@ -153,7 +149,7 @@ public class ParchmentControllerTest {
         Writer writer = getWriter();
         Parchment parchment = parchmentRepository.save(new Parchment("Title", "Contents"), writer.getId(), coreParchment.getId());
 
-        mvc.perform(get("/parchment/core").header("Authorization", "Bearer " + token))
+        mvc.perform(get("/parchment/core"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id", comparesEqualTo(Math.toIntExact(coreParchment.getId()))))
