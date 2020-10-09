@@ -34,6 +34,10 @@ public class ParchmentService {
         return parchmentRepository.findAllByWriterId(writerId);
     }
 
+    public List<Parchment> findAllByTitle(String title) {
+        return parchmentRepository.findAllByTitle(title);
+    }
+
     public Parchment findById(Long id) {
         try {
             return parchmentRepository.findById(id).get();

@@ -34,9 +34,14 @@ public class ParchmentController {
         }
     }
 
-    @GetMapping
-    public @ResponseBody List<Parchment> getParchments(@RequestParam Long writerId) {
-        return parchmentService.findAllByWriterId(writerId);
+    @GetMapping("/writer/{id}")
+    public @ResponseBody List<Parchment> getParchmentsByWriterId(@PathVariable Long id) {
+        return parchmentService.findAllByWriterId(id);
+    }
+
+    @GetMapping("/title/{title}")
+    public @ResponseBody List<Parchment> getParchmentsByTitle(@RequestParam String title) {
+        return parchmentService.findAllByTitle(title);
     }
 
     @GetMapping("/{id}")

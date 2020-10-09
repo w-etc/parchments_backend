@@ -46,7 +46,7 @@ public class ParchmentControllerTest {
     void get_parchments_by_writer_id_brings_an_empty_list_of_parchments_when_the_writer_does_not_exist() throws Exception {
         int nonExistantId = 100;
 
-        mvc.perform(get("/parchment?writerId=" + nonExistantId))
+        mvc.perform(get("/parchment/writer/" + nonExistantId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
     }
@@ -55,7 +55,7 @@ public class ParchmentControllerTest {
     void get_parchments_by_writer_id_brings_an_empty_list_of_parchments_when_the_writer_has_nothing_written() throws Exception {
         Writer writer = getWriter();
 
-        mvc.perform(get("/parchment?writerId=" + writer.getId()))
+        mvc.perform(get("/parchment/writer/" + writer.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
     }
@@ -65,7 +65,7 @@ public class ParchmentControllerTest {
         Writer writer = getWriter();
         parchmentRepository.save(new Parchment("Title", "Contents"), writer.getId());
 
-        mvc.perform(get("/parchment?writerId=" + writer.getId()))
+        mvc.perform(get("/parchment/writer/" + writer.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
     }
