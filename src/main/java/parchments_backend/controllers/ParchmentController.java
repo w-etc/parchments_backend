@@ -40,7 +40,7 @@ public class ParchmentController {
     }
 
     @GetMapping("/title/{title}")
-    public @ResponseBody List<Parchment> getParchmentsByTitle(@RequestParam String title) {
+    public @ResponseBody List<Parchment> getParchmentsByTitle(@PathVariable String title) {
         return parchmentService.findAllByTitle(title);
     }
 
