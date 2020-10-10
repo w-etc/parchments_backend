@@ -35,7 +35,7 @@ public class DataLoader implements ApplicationRunner {
             return;
         }
 
-        firstWriter = new Writer("Escritor", "");
+        firstWriter = new Writer("Writer", "1");
 
         writerRepository.save(firstWriter);
     }
@@ -46,38 +46,26 @@ public class DataLoader implements ApplicationRunner {
             return;
         }
 
-        Parchment theDoor = generateTheDoorParchment();
-        Parchment thePlague = generateThePlagueParchment();
-        Parchment theAncientScroll = generateLoremIpsumParchment();
+        Parchment theDoor = new Parchment("The Door", "A door stands in front of our hero, waiting to be opened. They could turn away and leave, but it has a gilded doorknob and it looks like it could be pried off if our hero yanked hard enough. The wood is pretty nice too. It could be used to make furniture.");
+        Parchment theWindow = new Parchment("The Window", "It looks like there's a window that our hero could break through. It's pitch black on the other side, no idea what's behind.");
+        Parchment theSecretTunnel = new Parchment("The Secret Tunnel", "Our hero spots a tiny hole on the left wall. They could crawl through it and see what's on the other side. It could be dangerous though.");
+        Parchment theTrapDoor = new Parchment("The Trap Door", "There's a tiny trap door in the middle of the hallway. It doesn't look like it's been opened ever. It'd be wise to leave it like that");
+        Parchment theHallway = new Parchment("The Hallway", "Our hero could always turn back to where they came from.");
+        Parchment theCeiling = new Parchment("The Ceiling", "It's a ceiling. No way it could open up a path, unless you brought the right tools");
+        Parchment theWasteOfTime = new Parchment("The Waste of Time", "Our hero wanders around from one end of the hallway to the other, not quite doing anything.");
+        Parchment thePlague = new Parchment("The Plague", "Unfortunately, a terrible poisonous cloud was waiting for our hero behind the door. He was never seen again.");
+        Parchment theAncientScroll = new Parchment("The Ancient Scroll", "An only piece of paper lied in the center of the room. Its ancient wisdom prayed:\n" +
+                "\n" +
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi eu erat laoreet, cursus libero ut, commodo neque. Aliquam pellentesque vulputate dignissim. Aliquam volutpat, ante at facilisis pellentesque, ipsum massa venenatis urna, sit amet vehicula lacus arcu sit amet ligula. Aliquam vestibulum elit augue, bibendum tempus nibh viverra ut. Donec mi turpis, egestas vitae molestie a, vestibulum at nulla. Curabitur sed tortor enim. Aenean dapibus sapien est. Praesent eu diam sit amet enim lobortis sollicitudin. Quisque eu ex id urna laoreet eleifend et vulputate tellus. Nulla rhoncus mauris at tempor ornare. Proin tincidunt, diam tristique auctor tempor, lacus diam mattis augue, ut tempus felis turpis a nisl. Praesent ornare ornare elit sit amet ultricies. Nam egestas tortor mi, et suscipit diam varius consectetur. Phasellus nec eros porttitor, viverra dolor eget, condimentum turpis. Quisque nec metus tincidunt, hendrerit ex eget, pretium mauris.");
         Parchment theOtherDoor = generateTheOtherDoorParchments();
 
         theDoor.setContinuations(Arrays.asList(thePlague, theOtherDoor, theAncientScroll));
-        firstWriter.setParchments(Arrays.asList(theDoor, thePlague, theAncientScroll));
+        firstWriter.setParchments(Arrays.asList(theDoor, thePlague, theAncientScroll, theWindow, theSecretTunnel, theTrapDoor, theHallway, theCeiling, theWasteOfTime));
         writerRepository.save(firstWriter);
     }
 
-    private Parchment generateTheDoorParchment() {
-        return new Parchment("La Puerta", "Quedan pocas cosas por quemar en el último piso del calabozo. No hay ni un trozo de madera en el pasillo de piedra que recorre nuestro protagonista, ni carne en los esqueletos que le hacen compañía. Alimentar el fuego de su antorcha con los harapos que llevan estos cuerpos solo sería una opción si fuera lo suficientemente valiente para siquiera mirarlos. Si están ahí es porque algo los mató. Reconocer su presencia no es una opción.\n" +
-                "\n" +
-                "Podía darse la vuelta y marcharse. Eventualmente volvería al Sol que dejó detrás, si es que todavía era de día. Lograría volver, dejando todos los horrores detrás, con las manos vacías. Sin haber revisado la última puerta enfrente suyo.\n" +
-                "\n" +
-                "Había llegado tan lejos por una razón. El último título de la tecnicatura se encontraba en alguna parte del calabozo. Tal vez estaba a punto de encontrarlo.\n" +
-                "\n" +
-                "Nuestro protagonista quitó la mano esquelética del picaporte y lo giró.");
-    }
-
-    private Parchment generateThePlagueParchment() {
-        return new Parchment("La Plaga", "Lamentablemente una terrible nube venenosa estaba esperando a nuestro protagonista detrás de la puerta. Nunca se lo volvió a ver.");
-    }
-
-    private Parchment generateLoremIpsumParchment() {
-        return new Parchment("El Pergamino Antiguo", "Un único pedazo de papel yacía en el centro del pequeño cuarto detrás de la puerta. Su antigua sabiduría rezaba:\n" +
-                "\n" +
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi eu erat laoreet, cursus libero ut, commodo neque. Aliquam pellentesque vulputate dignissim. Aliquam volutpat, ante at facilisis pellentesque, ipsum massa venenatis urna, sit amet vehicula lacus arcu sit amet ligula. Aliquam vestibulum elit augue, bibendum tempus nibh viverra ut. Donec mi turpis, egestas vitae molestie a, vestibulum at nulla. Curabitur sed tortor enim. Aenean dapibus sapien est. Praesent eu diam sit amet enim lobortis sollicitudin. Quisque eu ex id urna laoreet eleifend et vulputate tellus. Nulla rhoncus mauris at tempor ornare. Proin tincidunt, diam tristique auctor tempor, lacus diam mattis augue, ut tempus felis turpis a nisl. Praesent ornare ornare elit sit amet ultricies. Nam egestas tortor mi, et suscipit diam varius consectetur. Phasellus nec eros porttitor, viverra dolor eget, condimentum turpis. Quisque nec metus tincidunt, hendrerit ex eget, pretium mauris.");
-    }
-
     private Parchment generateTheOtherDoorParchments() {
-        Parchment theOtherDoor = new Parchment("La Otra Puerta", "Para su sorpresa, otra puerta lo esperaba detrás de la anterior.");
+        Parchment theOtherDoor = new Parchment("The Other Door", "To their surprise, another door waited behind the last one.");
 
         Parchment currentDoor = theOtherDoor;
         for (int i = 0; i < 10; i++) {
