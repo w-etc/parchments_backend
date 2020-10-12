@@ -49,7 +49,7 @@ public class ParchmentController {
         try {
             return ResponseEntity.ok(parchmentService.findById(id));
         } catch (Exception e) {
-            if (e.getMessage().equals(ParchmentService.WRITER_DOES_NOT_EXIST)) {
+            if (e.getMessage().equals(ParchmentService.PARCHMENT_DOES_NOT_EXIST)) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
             }
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

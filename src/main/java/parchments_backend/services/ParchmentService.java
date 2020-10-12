@@ -42,7 +42,7 @@ public class ParchmentService {
         try {
             return parchmentRepository.findById(id).get();
         } catch (Exception e) {
-            throw new RuntimeException(WRITER_DOES_NOT_EXIST);
+            throw new RuntimeException(PARCHMENT_DOES_NOT_EXIST);
         }
     }
 
