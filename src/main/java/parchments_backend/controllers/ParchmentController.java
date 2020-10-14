@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import parchments_backend.domain.Parchment;
 import parchments_backend.services.ParchmentService;
 import parchments_backend.wrappers.ParchmentPostData;
+import parchments_backend.wrappers.ParchmentResponseData;
 import parchments_backend.wrappers.WriterUser;
 
 import java.util.List;
@@ -47,7 +48,9 @@ public class ParchmentController {
     @GetMapping("/{id}")
     public @ResponseBody ResponseEntity<Object> getParchment(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(parchmentService.findById(id));
+            Parchment parchment = parchmentService.findById(id);
+            List<Parchment> breadcrumbs = parchmentService.findBreadcrumbs(id);
+            return ResponseEntity.ok(new ParchmentResponseData(parchment, breadcrumbs));
         } catch (Exception e) {
             if (e.getMessage().equals(ParchmentService.PARCHMENT_DOES_NOT_EXIST)) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

@@ -29,6 +29,12 @@ public interface ParchmentRepository extends Neo4jRepository<Parchment, Long> {
 
     Optional<Parchment> findById(Long id);
 
+    @Query("MATCH path=(p:Parchment)<-[:CONTINUATION*]-(pre:Parchment)\n" +
+            "WHERE id(p) = $id\n" +
+            "AND NOT (pre)<-[:CONTINUATION]-()\n" +
+            "RETURN reverse([node in nodes(path)| {title: node.title, id: id(node)}])")
+    List<Parchment> findBreadcrumbs(Long id);
+
     Optional<Parchment> findByTitle(String title);
 
     List<Parchment> findAll();

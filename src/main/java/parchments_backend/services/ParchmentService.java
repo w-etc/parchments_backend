@@ -46,6 +46,14 @@ public class ParchmentService {
         }
     }
 
+    public List<Parchment> findBreadcrumbs(Long lastParchmentId) {
+        try {
+            return parchmentRepository.findBreadcrumbs(lastParchmentId);
+        } catch (Exception e) {
+            throw new RuntimeException(PARCHMENT_DOES_NOT_EXIST);
+        }
+    }
+
     public List<Parchment> findCoreParchments() {
         return parchmentRepository.findCoreParchments();
     }

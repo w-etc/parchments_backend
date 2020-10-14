@@ -76,18 +76,18 @@ public class ParchmentControllerTest {
 
         mvc.perform(get("/parchment/" + parchment.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", comparesEqualTo(Math.toIntExact(parchment.getId()))))
-                .andExpect(jsonPath("$.title", comparesEqualTo(parchment.getTitle())))
-                .andExpect(jsonPath("$.contents", comparesEqualTo(parchment.getContents())))
-                .andExpect(jsonPath("$.continuations", hasSize(0)))
-                .andExpect(jsonPath("$.parentParchment", equalTo(null)));
+                .andExpect(jsonPath("$.parchment.id", comparesEqualTo(Math.toIntExact(parchment.getId()))))
+                .andExpect(jsonPath("$.parchment.title", comparesEqualTo(parchment.getTitle())))
+                .andExpect(jsonPath("$.parchment.contents", comparesEqualTo(parchment.getContents())))
+                .andExpect(jsonPath("$.parchment.continuations", hasSize(0)))
+                .andExpect(jsonPath("$.parchment.parentParchment", equalTo(null)));
     }
 
     @Test
     void get_parchment_by_id_returns_bad_request_if_the_parchment_does_not_exist() throws Exception {
         mvc.perform(get("/parchment/1"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", comparesEqualTo(ParchmentService.WRITER_DOES_NOT_EXIST)));
+                .andExpect(jsonPath("$", comparesEqualTo(ParchmentService.PARCHMENT_DOES_NOT_EXIST)));
     }
 
     @Test
