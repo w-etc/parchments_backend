@@ -49,8 +49,8 @@ public class ParchmentController {
     public @ResponseBody ResponseEntity<Object> getParchment(@PathVariable Long id) {
         try {
             Parchment parchment = parchmentService.findById(id);
-            List<Parchment> breadcrumbs = parchmentService.findBreadcrumbs(id);
-            return ResponseEntity.ok(new ParchmentResponseData(parchment, breadcrumbs));
+            List<Object> breadcrumbs = parchmentService.findBreadcrumbs(id);
+            return ResponseEntity.ok(new ParchmentResponseData(parchment, (List<Object>) breadcrumbs.get(0)));
         } catch (Exception e) {
             if (e.getMessage().equals(ParchmentService.PARCHMENT_DOES_NOT_EXIST)) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
