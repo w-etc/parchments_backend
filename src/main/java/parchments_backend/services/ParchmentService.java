@@ -46,7 +46,7 @@ public class ParchmentService {
         }
     }
 
-    public List<Object> findBreadcrumbs(Long lastParchmentId) {
+    public Object findBreadcrumbs(Long lastParchmentId) {
         try {
             return parchmentRepository.findBreadcrumbs(lastParchmentId);
         } catch (Exception e) {

@@ -6,9 +6,9 @@ import java.util.List;
 
 public class ParchmentResponseData {
     public Parchment parchment;
-    public List<Object> breadcrumbs;
+    public Object breadcrumbs;
 
-    public ParchmentResponseData(Parchment parchment, List<Object> breadcrumbs) {
+    public ParchmentResponseData(Parchment parchment, Object breadcrumbs) {
         this.parchment = parchment;
         this.breadcrumbs = breadcrumbs;
     }
