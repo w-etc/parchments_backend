@@ -2,9 +2,9 @@ package parchments_backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import parchments_backend.domain.BreadcrumbList;
 import parchments_backend.domain.Parchment;
 import parchments_backend.repositories.ParchmentRepository;
-
 import java.util.List;
 
 @Service
@@ -46,9 +46,14 @@ public class ParchmentService {
         }
     }
 
-    public Object findBreadcrumbs(Long lastParchmentId) {
+    public BreadcrumbList findBreadcrumbs(Parchment parchment) {
         try {
-            return parchmentRepository.findBreadcrumbs(lastParchmentId);
+            BreadcrumbList breadcrumbList = parchmentRepository.findBreadcrumbs(parchment.getId());
+            if (breadcrumbList == null) {
+                breadcrumbList = new BreadcrumbList();
+                breadcrumbList.ensureMinimumSize(parchment);
+            }
+            return breadcrumbList;
         } catch (Exception e) {
             throw new RuntimeException(PARCHMENT_DOES_NOT_EXIST);
         }

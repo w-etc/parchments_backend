@@ -2,8 +2,8 @@ package parchments_backend.repositories;
 
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
+import parchments_backend.domain.BreadcrumbList;
 import parchments_backend.domain.Parchment;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -29,8 +29,8 @@ public interface ParchmentRepository extends Neo4jRepository<Parchment, Long> {
 
     Optional<Parchment> findById(Long id);
 
-    @Query("MATCH path=(p:Parchment)<-[:CONTINUATION*]-(pre:Parchment) WHERE ID(p) = $id AND NOT (pre)<-[:CONTINUATION]-() RETURN reverse([node in nodes(path)| {title: node.title, id: id(node)}])")
-    Object findBreadcrumbs(Long id);
+    @Query("MATCH path=(p:Parchment)<-[:CONTINUATION*]-(pre:Parchment) WHERE ID(p) = $id AND NOT (pre)<-[:CONTINUATION]-() RETURN reverse([node in nodes(path)| {title: node.title, id: id(node)}]) as list")
+    BreadcrumbList findBreadcrumbs(Long id);
 
     Optional<Parchment> findByTitle(String title);
 

@@ -6,12 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import parchments_backend.domain.BreadcrumbList;
 import parchments_backend.domain.Parchment;
 import parchments_backend.services.ParchmentService;
 import parchments_backend.wrappers.ParchmentPostData;
 import parchments_backend.wrappers.ParchmentResponseData;
 import parchments_backend.wrappers.WriterUser;
-
 import java.util.List;
 
 @Controller
@@ -49,8 +49,8 @@ public class ParchmentController {
     public @ResponseBody ResponseEntity<Object> getParchment(@PathVariable Long id) {
         try {
             Parchment parchment = parchmentService.findById(id);
-            Object breadcrumbs = parchmentService.findBreadcrumbs(id);
-            return ResponseEntity.ok(new ParchmentResponseData(parchment, breadcrumbs));
+            BreadcrumbList breadcrumbList = parchmentService.findBreadcrumbs(parchment);
+            return ResponseEntity.ok(new ParchmentResponseData(parchment, breadcrumbList.getList()));
         } catch (Exception e) {
             if (e.getMessage().equals(ParchmentService.PARCHMENT_DOES_NOT_EXIST)) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
