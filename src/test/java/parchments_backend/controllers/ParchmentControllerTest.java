@@ -63,7 +63,7 @@ public class ParchmentControllerTest {
     @Test
     void get_parchments_by_writer_id_brings_the_writers_parchments() throws Exception {
         Writer writer = getWriter();
-        parchmentRepository.save(new Parchment("Title", "Contents"), writer.getId());
+        parchmentRepository.save(new Parchment("Title", "Synopsis", "Contents"), writer.getId());
 
         mvc.perform(get("/parchment/writer/" + writer.getId()))
                 .andExpect(status().isOk())
@@ -147,7 +147,7 @@ public class ParchmentControllerTest {
     void get_core_parchments_does_not_bring_parchments_with_parent() throws Exception {
         Parchment coreParchment = getParchment();
         Writer writer = getWriter();
-        Parchment parchment = parchmentRepository.save(new Parchment("Title", "Contents"), writer.getId(), coreParchment.getId());
+        Parchment parchment = parchmentRepository.save(new Parchment("Title", "Synopsis", "Contents"), writer.getId(), coreParchment.getId());
 
         mvc.perform(get("/parchment/core"))
                 .andExpect(status().isOk())
@@ -161,6 +161,6 @@ public class ParchmentControllerTest {
     }
 
     private Parchment getParchment() {
-        return parchmentRepository.save(new Parchment("Title", "Contents"));
+        return parchmentRepository.save(new Parchment("Title", "Synopsis", "Contents"));
     }
 }

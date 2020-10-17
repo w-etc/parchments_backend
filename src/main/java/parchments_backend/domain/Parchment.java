@@ -16,6 +16,7 @@ public class Parchment {
     @GeneratedValue
     private Long id;
     private String title;
+    private String synopsis;
     private String contents;
 
     @JsonIgnoreProperties("continuations")
@@ -29,8 +30,9 @@ public class Parchment {
     public Parchment() {
     }
 
-    public Parchment(String title, String contents) {
+    public Parchment(String title, String synopsis, String contents) {
         this.title = title;
+        this.synopsis = synopsis;
         this.contents = contents;
     }
 
@@ -48,6 +50,14 @@ public class Parchment {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getSynopsis() {
+        return synopsis;
+    }
+
+    public void setSynopsis(String synopsis) {
+        this.synopsis = synopsis;
     }
 
     public String getContents() {
