@@ -3,6 +3,9 @@ package parchments_backend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import parchments_backend.domain.Parchment;
 import parchments_backend.domain.Writer;
@@ -23,6 +26,10 @@ public class DataLoader implements ApplicationRunner {
     @Autowired
     private ParchmentRepository parchmentRepository;
 
+    @Bean
+    PasswordEncoder getEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     public void run(ApplicationArguments args) {
         seedWritersTable();
@@ -35,7 +42,7 @@ public class DataLoader implements ApplicationRunner {
             return;
         }
 
-        firstWriter = new Writer("Writer", "1");
+        firstWriter = new Writer("Writer", getEncoder().encode("1"));
 
         writerRepository.save(firstWriter);
     }
