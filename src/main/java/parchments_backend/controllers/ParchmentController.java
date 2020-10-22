@@ -60,9 +60,9 @@ public class ParchmentController {
     }
 
     @GetMapping("/core")
-    public @ResponseBody ResponseEntity<Object> getCoreParchments() {
+    public @ResponseBody ResponseEntity<Object> getCoreParchments(@RequestParam Integer page) {
         try {
-            return ResponseEntity.ok(parchmentService.findCoreParchments());
+            return ResponseEntity.ok(parchmentService.findCoreParchments(page));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

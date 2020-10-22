@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.neo4j.DataNeo4jTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import parchments_backend.domain.Parchment;
 import parchments_backend.domain.Writer;
 import java.util.List;
@@ -106,21 +108,21 @@ public class ParchmentRepositoryTest {
     @Test
     void brings_in_core_parchments_a_parchment_without_parent() {
         Parchment parchment = saveParchment("Title", writer, null);
-        List<Parchment> parchments = parchmentRepository.findCoreParchments();
+        Page<Parchment> parchments = parchmentRepository.findCoreParchments(PageRequest.of(0, 20));
 
-        assertThat(parchments.size()).isEqualTo(1);
-        assertThat(parchments.get(0).getId()).isEqualTo(parchment.getId());
+        assertThat(parchments.getTotalElements()).isEqualTo(1);
+        assertThat(parchments.getContent().get(0).getId()).isEqualTo(parchment.getId());
     }
 
     @Test
     void does_not_bring_in_core_parchments_a_parchment_with_parent() {
         Parchment coreParchment = saveParchment("Title", writer, null);
         Parchment parchment = saveParchment("Title", writer, coreParchment);
-        List<Parchment> parchments = parchmentRepository.findCoreParchments();
+        Page<Parchment> parchments = parchmentRepository.findCoreParchments(PageRequest.of(0, 20));
 
-        assertThat(parchments.size()).isEqualTo(1);
-        assertThat(parchments.get(0).getId()).isNotEqualTo(parchment.getId());
-        assertThat(parchments.get(0).getId()).isEqualTo(coreParchment.getId());
+        assertThat(parchments.getTotalElements()).isEqualTo(1);
+        assertThat(parchments.getContent().get(0).getId()).isNotEqualTo(parchment.getId());
+        assertThat(parchments.getContent().get(0).getId()).isEqualTo(coreParchment.getId());
     }
 
     private Parchment saveParchment(String title, Writer writer, Parchment previousParchment) {

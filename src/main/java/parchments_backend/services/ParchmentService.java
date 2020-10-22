@@ -1,6 +1,7 @@
 package parchments_backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import parchments_backend.domain.BreadcrumbList;
 import parchments_backend.domain.Parchment;
@@ -59,8 +60,8 @@ public class ParchmentService {
         }
     }
 
-    public List<Parchment> findCoreParchments() {
-        return parchmentRepository.findCoreParchments();
+    public List<Parchment> findCoreParchments(Integer page) {
+        return parchmentRepository.findCoreParchments(PageRequest.of(page, 20)).getContent();
     }
 
     public Parchment findRandomCoreParchment() {

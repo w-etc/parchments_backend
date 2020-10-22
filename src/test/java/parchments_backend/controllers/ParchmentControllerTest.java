@@ -137,7 +137,7 @@ public class ParchmentControllerTest {
     @Test
     void get_core_parchments_brings_parchments_without_parent() throws Exception {
         Parchment parchment = getParchment();
-        mvc.perform(get("/parchment/core"))
+        mvc.perform(get("/parchment/core?page=0"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id", comparesEqualTo(Math.toIntExact(parchment.getId()))));
@@ -149,7 +149,7 @@ public class ParchmentControllerTest {
         Writer writer = getWriter();
         Parchment parchment = parchmentRepository.save(new Parchment("Title", "Synopsis", "Contents"), writer.getId(), coreParchment.getId());
 
-        mvc.perform(get("/parchment/core"))
+        mvc.perform(get("/parchment/core?page=0"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id", comparesEqualTo(Math.toIntExact(coreParchment.getId()))))

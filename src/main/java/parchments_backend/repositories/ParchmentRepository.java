@@ -1,5 +1,7 @@
 package parchments_backend.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import parchments_backend.domain.BreadcrumbList;
@@ -21,8 +23,9 @@ public interface ParchmentRepository extends Neo4jRepository<Parchment, Long> {
     @Query("MATCH (p:Parchment) WHERE toLower(p.title) CONTAINS toLower($title) RETURN p")
     List<Parchment> findAllByTitle(String title);
 
-    @Query("MATCH (p:Parchment) WHERE NOT (p)<-[:CONTINUATION]-(:Parchment) RETURN p")
-    List<Parchment> findCoreParchments();
+    @Query(value="MATCH (p:Parchment) WHERE NOT (p)<-[:CONTINUATION]-(:Parchment) RETURN p",
+            countQuery = "MATCH (p:Parchment) WHERE NOT (p)<-[:CONTINUATION]-(:Parchment) RETURN count(p)")
+    Page<Parchment> findCoreParchments(Pageable pageable);
 
     @Query("MATCH (p:Parchment) WHERE NOT (p)<-[:CONTINUATION]-(:Parchment) RETURN p, rand() as r ORDER BY r LIMIT 1")
     Optional<Parchment> findRandomCoreParchment();
