@@ -16,6 +16,8 @@ import parchments_backend.repositories.ParchmentRepository;
 import parchments_backend.repositories.WriterRepository;
 import parchments_backend.services.ParchmentService;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -156,11 +158,36 @@ public class ParchmentControllerTest {
                 .andExpect(jsonPath("$[0].id", not(comparesEqualTo(Math.toIntExact(parchment.getId())))));
     }
 
+    @Test
+    void get_continuations_returns_the_continuations_of_a_parchment() throws Exception {
+        Writer writer = getWriter();
+        Parchment coreParchment = getParchment();
+        List<Parchment> continuations = Arrays.asList(getContinuation(writer, coreParchment), getContinuation(writer, coreParchment));
+
+
+        mvc.perform(get("/parchment/" + coreParchment.getId() + "/continuations?page=0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(continuations.size())));
+    }
+
+    @Test
+    void get_continuations_returns_an_empty_list_if_the_parchment_has_no_continuations() throws Exception {
+        Parchment coreParchment = getParchment();
+
+        mvc.perform(get("/parchment/" + coreParchment.getId() + "/continuations?page=0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
     private Writer getWriter() {
         return writerRepository.save(new Writer("username", "password"));
     }
 
     private Parchment getParchment() {
         return parchmentRepository.save(new Parchment("Title", "Synopsis", "Contents"));
+    }
+
+    private Parchment getContinuation(Writer writer, Parchment parent) {
+        return parchmentRepository.save(new Parchment("Continuation", "Synopsis", "Contents"), writer.getId(), parent.getId());
     }
 }

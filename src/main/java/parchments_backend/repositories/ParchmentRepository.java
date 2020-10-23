@@ -38,4 +38,8 @@ public interface ParchmentRepository extends Neo4jRepository<Parchment, Long> {
     Optional<Parchment> findByTitle(String title);
 
     List<Parchment> findAll();
+
+    @Query(value="MATCH (pre:Parchment)-[:CONTINUATION]->(p:Parchment) WHERE id(pre) = $id RETURN p",
+            countQuery = "MATCH (pre:Parchment)-[:CONTINUATION]->(p:Parchment) WHERE id(pre) = $id RETURN count(p)")
+    Page<Parchment> findContinuationsById(Pageable pageable, Long id);
 }

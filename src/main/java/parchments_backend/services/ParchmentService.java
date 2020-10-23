@@ -61,12 +61,20 @@ public class ParchmentService {
     }
 
     public List<Parchment> findCoreParchments(Integer page) {
-        return parchmentRepository.findCoreParchments(PageRequest.of(page, 20)).getContent();
+        return parchmentRepository.findCoreParchments(PageRequest.of(page, 5)).getContent();
     }
 
     public Parchment findRandomCoreParchment() {
         try {
             return parchmentRepository.findRandomCoreParchment().get();
+        } catch (Exception e) {
+            throw new RuntimeException(PARCHMENT_DOES_NOT_EXIST);
+        }
+    }
+
+    public List<Parchment> findContinuationsById(Long id, Integer page) {
+        try {
+            return parchmentRepository.findContinuationsById(PageRequest.of(page, 5), id).getContent();
         } catch (Exception e) {
             throw new RuntimeException(PARCHMENT_DOES_NOT_EXIST);
         }

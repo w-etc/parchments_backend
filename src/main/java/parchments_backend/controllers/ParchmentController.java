@@ -59,6 +59,19 @@ public class ParchmentController {
         }
     }
 
+    @GetMapping("/{id}/continuations")
+    public @ResponseBody ResponseEntity<Object> getContinuations(@PathVariable Long id, @RequestParam Integer page) {
+        try {
+            List<Parchment> parchments = parchmentService.findContinuationsById(id, page);
+            return ResponseEntity.ok(parchments);
+        } catch (Exception e) {
+            if (e.getMessage().equals(ParchmentService.PARCHMENT_DOES_NOT_EXIST)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
     @GetMapping("/core")
     public @ResponseBody ResponseEntity<Object> getCoreParchments(@RequestParam Integer page) {
         try {
