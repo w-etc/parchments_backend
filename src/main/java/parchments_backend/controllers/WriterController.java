@@ -16,6 +16,8 @@ import parchments_backend.domain.JwtResponse;
 import parchments_backend.domain.UsernameDto;
 import parchments_backend.domain.WriterDto;
 import parchments_backend.services.WriterService;
+import parchments_backend.wrappers.WriterUser;
+
 import javax.validation.Valid;
 
 @Controller
@@ -33,9 +35,9 @@ public class WriterController {
 
     @PostMapping("/register")
     public @ResponseBody ResponseEntity<Object> register(@Valid @RequestBody WriterDto writerDto) {
-        UserDetails userDetails = writerService.register(writerDto);
+        WriterUser userDetails = writerService.register(writerDto);
         final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
+        return ResponseEntity.ok(new JwtResponse(token, userDetails.getId()));
     }
 
     @PostMapping("/check")
@@ -47,9 +49,9 @@ public class WriterController {
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody @Valid JwtRequest authenticationRequest) throws Exception {
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-        final UserDetails userDetails = writerService.loadUserByUsername(authenticationRequest.getUsername());
+        final WriterUser userDetails = writerService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
+        return ResponseEntity.ok(new JwtResponse(token, userDetails.getId()));
     }
 
     private void authenticate(String username, String password) throws Exception {

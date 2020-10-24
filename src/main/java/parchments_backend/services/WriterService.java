@@ -24,10 +24,10 @@ public class WriterService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public UserDetails register(WriterDto writerDto) {
+    public WriterUser register(WriterDto writerDto) {
         String encodedPassword = passwordEncoder.encode(writerDto.getPassword());
-        writerRepository.save(new Writer(writerDto.getUsername(), encodedPassword));
-        return new User(writerDto.getUsername(), encodedPassword, Collections.emptyList());
+        Writer writer = writerRepository.save(new Writer(writerDto.getUsername(), encodedPassword));
+        return new WriterUser(writerDto.getUsername(), encodedPassword, writer.getId());
     }
 
     public boolean checkValidUsername(String username) {
@@ -35,7 +35,7 @@ public class WriterService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public WriterUser loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Writer> optionalWriter = writerRepository.findAuthenticatedUser(username);
         if (optionalWriter.isPresent()) {
             Writer retrievedWriter = optionalWriter.get();
