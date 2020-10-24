@@ -81,7 +81,6 @@ public class ParchmentControllerTest {
                 .andExpect(jsonPath("$.parchment.id", comparesEqualTo(Math.toIntExact(parchment.getId()))))
                 .andExpect(jsonPath("$.parchment.title", comparesEqualTo(parchment.getTitle())))
                 .andExpect(jsonPath("$.parchment.contents", comparesEqualTo(parchment.getContents())))
-                .andExpect(jsonPath("$.parchment.continuations", hasSize(0)))
                 .andExpect(jsonPath("$.parchment.parentParchment", equalTo(null)));
     }
 

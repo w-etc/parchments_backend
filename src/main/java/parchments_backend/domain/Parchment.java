@@ -1,5 +1,6 @@
 package parchments_backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
@@ -19,7 +20,7 @@ public class Parchment {
     private String synopsis;
     private String contents;
 
-    @JsonIgnoreProperties("continuations")
+    @JsonIgnore
     @Relationship(type = "CONTINUATION")
     private List<Parchment> continuations = new ArrayList<>();
 
