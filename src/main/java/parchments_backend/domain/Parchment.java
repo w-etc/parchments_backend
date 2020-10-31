@@ -24,9 +24,13 @@ public class Parchment {
     @Relationship(type = "CONTINUATION")
     private List<Parchment> continuations = new ArrayList<>();
 
-    @JsonIgnoreProperties({"title", "contents", "continuations", "parentParchment"})
+    @JsonIgnoreProperties({"title", "synopsis", "contents", "continuations", "parentParchment", "writer"})
     @Relationship(type = "CONTINUATION", direction = Relationship.INCOMING)
     private Parchment parentParchment;
+
+    @JsonIgnoreProperties({"parchments", "username", "password"})
+    @Relationship(type = "WROTE", direction = Relationship.INCOMING)
+    private Writer writer;
 
     public Parchment() {
     }
@@ -90,5 +94,13 @@ public class Parchment {
 
     public void setParentParchment(Parchment parentParchment) {
         this.parentParchment = parentParchment;
+    }
+
+    public Writer getWriter() {
+        return writer;
+    }
+
+    public void setWriter(Writer writer) {
+        this.writer = writer;
     }
 }
