@@ -86,11 +86,11 @@ public class DataLoader implements ApplicationRunner {
 
     private Parchment generateTheOtherDoorParchments() {
         String theOtherDoorText = "To their surprise, another door waited behind the last one.";
-        Parchment theOtherDoor = new Parchment("The Other Door", theOtherDoorText, theOtherDoorText);
+        Parchment theOtherDoor = new Parchment(firstWriter, "The Other Door", theOtherDoorText, theOtherDoorText);
 
         Parchment currentDoor = theOtherDoor;
         for (int i = 0; i < 10; i++) {
-            Parchment newDoor = new Parchment(theOtherDoor.getTitle(), theOtherDoor.getSynopsis(), theOtherDoor.getContents());
+            Parchment newDoor = new Parchment(firstWriter, theOtherDoor.getTitle(), theOtherDoor.getSynopsis(), theOtherDoor.getContents());
             currentDoor.setContinuations(Collections.singletonList(newDoor));
             currentDoor = newDoor;
         }

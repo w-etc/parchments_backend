@@ -37,6 +37,13 @@ public class Parchment {
         this.contents = contents;
     }
 
+    public Parchment(Writer writer, String title, String synopsis, String contents) {
+        this.writer = writer;
+        this.title = title;
+        this.synopsis = synopsis;
+        this.contents = contents;
+    }
+
     public Long getId() {
         return id;
     }
