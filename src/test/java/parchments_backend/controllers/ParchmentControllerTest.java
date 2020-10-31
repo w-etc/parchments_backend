@@ -1,5 +1,6 @@
 package parchments_backend.controllers;
 
+import net.minidev.json.JSONArray;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -176,6 +177,16 @@ public class ParchmentControllerTest {
         mvc.perform(get("/parchment/" + coreParchment.getId() + "/continuations?page=0"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    void get_random_parchment_brings_a_parchment_with_breadcrumbs() throws Exception {
+        getParchment();
+
+        mvc.perform(get("/parchment/core/random"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.parchment", notNullValue()))
+                .andExpect(jsonPath("$.breadcrumbs", isA(JSONArray.class)));
     }
 
     private Writer getWriter() {

@@ -84,9 +84,11 @@ public class ParchmentController {
     @GetMapping("/core/random")
     public @ResponseBody ResponseEntity<Object> getRandomCoreParchment() {
         try {
-            return ResponseEntity.ok(parchmentService.findRandomCoreParchment());
+            Parchment parchment = parchmentService.findRandomCoreParchment();
+            BreadcrumbList breadcrumbList = parchmentService.findBreadcrumbs(parchment);
+            return ResponseEntity.ok(new ParchmentResponseData(parchment, breadcrumbList.getList()));
         } catch (Exception e) {
-            if (e.getMessage().equals(ParchmentService.WRITER_DOES_NOT_EXIST)) {
+            if (e.getMessage().equals(ParchmentService.PARCHMENT_DOES_NOT_EXIST)) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
             }
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

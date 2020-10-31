@@ -17,7 +17,7 @@ public class BreadcrumbList {
     }
 
     public void ensureMinimumSize(Parchment parchment) {
-        if (this.list.size() == 0) {
+        if (this.list.isEmpty()) {
             this.list.add(new Breadcrumb(parchment.getTitle(), parchment.getId()));
         }
     }
