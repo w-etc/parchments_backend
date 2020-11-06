@@ -1,11 +1,11 @@
 package parchments_backend.domain;
 
-import org.springframework.data.neo4j.annotation.QueryResult;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
-@QueryResult
+
 public class BreadcrumbList {
     private List<Breadcrumb> list = new ArrayList<>();
 

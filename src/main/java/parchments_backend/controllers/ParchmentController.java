@@ -48,7 +48,9 @@ public class ParchmentController {
     @GetMapping("/{id}")
     public @ResponseBody ResponseEntity<Object> getParchment(@PathVariable Long id) {
         try {
-            Parchment parchment = parchmentService.findById(id);
+//            Parchment parchment = parchmentService.findById(id);
+            Parchment parchment = new Parchment();
+            parchment.setId(id);
             BreadcrumbList breadcrumbList = parchmentService.findBreadcrumbs(parchment);
             return ResponseEntity.ok(new ParchmentResponseData(parchment, breadcrumbList.getList()));
         } catch (Exception e) {

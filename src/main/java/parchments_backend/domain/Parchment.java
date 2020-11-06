@@ -2,15 +2,15 @@ package parchments_backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.neo4j.ogm.annotation.GeneratedValue;
-import org.neo4j.ogm.annotation.Id;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Relationship;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
+import org.springframework.data.neo4j.core.schema.Id;
+import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@NodeEntity
+@Node
 public class Parchment {
 
     @Id
@@ -25,11 +25,11 @@ public class Parchment {
     private List<Parchment> continuations = new ArrayList<>();
 
     @JsonIgnoreProperties({"title", "synopsis", "contents", "continuations", "parentParchment", "writer"})
-    @Relationship(type = "CONTINUATION", direction = Relationship.INCOMING)
+    @Relationship(type = "CONTINUATION", direction = Relationship.Direction.INCOMING)
     private Parchment parentParchment;
 
     @JsonIgnoreProperties({"parchments", "username", "password"})
-    @Relationship(type = "WROTE", direction = Relationship.INCOMING)
+    @Relationship(type = "WROTE", direction = Relationship.Direction.INCOMING)
     private Writer writer;
 
     public Parchment() {

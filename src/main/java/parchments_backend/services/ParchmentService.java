@@ -3,6 +3,7 @@ package parchments_backend.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import parchments_backend.domain.Breadcrumb;
 import parchments_backend.domain.BreadcrumbList;
 import parchments_backend.domain.Parchment;
 import parchments_backend.repositories.ParchmentRepository;
@@ -23,9 +24,9 @@ public class ParchmentService {
         }
         try {
             if (previousParchmentId != null) {
-                return parchmentRepository.save(parchment, writerId, previousParchmentId);
+                return parchmentRepository.save(parchment.getTitle(), parchment.getSynopsis(), parchment.getContents(), writerId, previousParchmentId);
             }
-            return parchmentRepository.save(parchment, writerId);
+            return parchmentRepository.save(parchment.getTitle(), parchment.getSynopsis(), parchment.getContents(), writerId);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -41,7 +42,7 @@ public class ParchmentService {
 
     public Parchment findById(Long id) {
         try {
-            return parchmentRepository.findById(id).get();
+            return parchmentRepository.findAsd(id).get();
         } catch (Exception e) {
             throw new RuntimeException(PARCHMENT_DOES_NOT_EXIST);
         }
@@ -49,12 +50,13 @@ public class ParchmentService {
 
     public BreadcrumbList findBreadcrumbs(Parchment parchment) {
         try {
-            BreadcrumbList breadcrumbList = parchmentRepository.findBreadcrumbs(parchment.getId());
-            if (breadcrumbList == null) {
-                breadcrumbList = new BreadcrumbList();
-                breadcrumbList.ensureMinimumSize(parchment);
-            }
-            return breadcrumbList;
+            List<Breadcrumb> breadcrumbList = parchmentRepository.findBreadcrumbs(parchment.getId());
+//            if (breadcrumbList == null) {
+//                breadcrumbList = new BreadcrumbList();
+//                breadcrumbList.ensureMinimumSize(parchment);
+//            }
+//            return breadcrumbList;
+            return new BreadcrumbList();
         } catch (Exception e) {
             throw new RuntimeException(PARCHMENT_DOES_NOT_EXIST);
         }

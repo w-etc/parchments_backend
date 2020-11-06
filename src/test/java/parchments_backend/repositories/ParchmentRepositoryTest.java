@@ -126,10 +126,9 @@ public class ParchmentRepositoryTest {
     }
 
     private Parchment saveParchment(String title, Writer writer, Parchment previousParchment) {
-        Parchment parchment = new Parchment(title, "synopsis", "contents");
         if (previousParchment != null) {
-            return parchmentRepository.save(parchment, writer.getId(), previousParchment.getId());
+            return parchmentRepository.save(title, "synopsis", "contents", writer.getId(), previousParchment.getId());
         }
-        return parchmentRepository.save(parchment, writer.getId());
+        return parchmentRepository.save(title, "synopsis", "contents", writer.getId());
     }
 }
