@@ -2,12 +2,14 @@ package parchments_backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import parchments_backend.domain.BreadcrumbList;
 import parchments_backend.domain.Parchment;
 import parchments_backend.domain.Writer;
 import parchments_backend.repositories.ParchmentRepository;
 import parchments_backend.repositories.WriterRepository;
+import parchments_backend.wrappers.WriterUser;
 
 import java.util.List;
 
@@ -48,7 +50,9 @@ public class ParchmentService {
 
     public Parchment findById(Long id) {
         try {
-            return parchmentRepository.findById(id).get();
+            Parchment parchment = parchmentRepository.findById(id).get();
+            setVoteInformation(parchment);
+            return parchment;
         } catch (Exception e) {
             throw new RuntimeException(PARCHMENT_DOES_NOT_EXIST);
         }
@@ -74,6 +78,7 @@ public class ParchmentService {
     public Parchment findRandomCoreParchment() {
         try {
             Parchment parchment = parchmentRepository.findRandomCoreParchment().get();
+            setVoteInformation(parchment);
             Writer writer = writerRepository.findByParchmentId(parchment.getId()).get();
             parchment.setWriter(writer);
             return parchment;
@@ -87,6 +92,26 @@ public class ParchmentService {
             return parchmentRepository.findContinuationsById(PageRequest.of(page, 5), id).getContent();
         } catch (Exception e) {
             throw new RuntimeException(PARCHMENT_DOES_NOT_EXIST);
+        }
+    }
+
+    public void voteParchment(Long writerId, Long parchmentId) {
+        try {
+            parchmentRepository.voteParchment(writerId, parchmentId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean userIsAuthenticated() {
+        return SecurityContextHolder.getContext().getAuthentication() != null;
+    }
+
+    private void setVoteInformation(Parchment parchment) {
+        parchment.setVoteCount(parchmentRepository.getVoteCount(parchment.getId()));
+        if (userIsAuthenticated()) {
+            WriterUser reader = (WriterUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            parchment.setReaderVoted(parchmentRepository.getReaderVoted(reader.getId(), parchment.getId()));
         }
     }
 }

@@ -94,4 +94,16 @@ public class ParchmentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+    @PostMapping("/{id}/vote")
+    public @ResponseBody ResponseEntity<Object> voteParchment(@PathVariable Long id) {
+        try {
+            WriterUser user = (WriterUser) SecurityContextHolder.getContext().getAuthentication()
+                    .getPrincipal();
+            parchmentService.voteParchment(user.getId(), id);
+            return ResponseEntity.ok(200);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }

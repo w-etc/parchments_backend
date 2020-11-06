@@ -2,10 +2,7 @@ package parchments_backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.neo4j.ogm.annotation.GeneratedValue;
-import org.neo4j.ogm.annotation.Id;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +16,11 @@ public class Parchment {
     private String title;
     private String synopsis;
     private String contents;
+
+    @Transient
+    private Integer voteCount;
+    @Transient
+    private boolean readerVoted;
 
     @JsonIgnore
     @Relationship(type = "CONTINUATION")
@@ -102,5 +104,21 @@ public class Parchment {
 
     public void setWriter(Writer writer) {
         this.writer = writer;
+    }
+
+    public void setVoteCount(Integer voteCount) {
+        this.voteCount = voteCount;
+    }
+
+    public Integer getVoteCount() {
+        return voteCount;
+    }
+
+    public boolean getReaderVoted() {
+        return readerVoted;
+    }
+
+    public void setReaderVoted(boolean readerVoted) {
+        this.readerVoted = readerVoted;
     }
 }

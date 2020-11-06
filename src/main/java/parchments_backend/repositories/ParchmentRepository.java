@@ -43,4 +43,13 @@ public interface ParchmentRepository extends Neo4jRepository<Parchment, Long> {
     @Query(value="MATCH (pre:Parchment)-[:CONTINUATION]->(p:Parchment) WHERE id(pre) = $id RETURN p",
             countQuery = "MATCH (pre:Parchment)-[:CONTINUATION]->(p:Parchment) WHERE id(pre) = $id RETURN count(p)")
     Page<Parchment> findContinuationsById(Pageable pageable, Long id);
+
+    @Query("MATCH (p:Parchment), (w:Writer) WHERE id(p) = $parchmentId AND id(w) = $writerId CREATE (w)-[:VOTED {writerId: id(w)}]->(p)")
+    void voteParchment(Long writerId, Long parchmentId);
+
+    @Query("MATCH (p:Parchment)<-[v:VOTED]-(:Writer) WHERE id(p) = $parchmentId RETURN count(v)")
+    Integer getVoteCount(Long parchmentId);
+
+    @Query("MATCH (p:Parchment), (w:Writer) WHERE id(p) = $id AND id(w) = $readerId RETURN EXISTS( (w)-[:VOTED]->(p) )")
+    boolean getReaderVoted(Long readerId, Long id);
 }
