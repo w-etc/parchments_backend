@@ -194,7 +194,7 @@ public class ParchmentControllerTest {
     }
 
     private Parchment getParchment() {
-        return parchmentRepository.save(new Parchment("Title", "Synopsis", "Contents"));
+        return parchmentRepository.save(new Parchment("Title", "Synopsis", "Contents"), getWriter().getId());
     }
 
     private Parchment getContinuation(Writer writer, Parchment parent) {

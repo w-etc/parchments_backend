@@ -5,7 +5,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import parchments_backend.domain.BreadcrumbList;
 import parchments_backend.domain.Parchment;
+import parchments_backend.domain.Writer;
 import parchments_backend.repositories.ParchmentRepository;
+import parchments_backend.repositories.WriterRepository;
+
 import java.util.List;
 
 @Service
@@ -16,6 +19,10 @@ public class ParchmentService {
     public static final String PARCHMENT_DOES_NOT_EXIST = "The parchment does not exist";
     @Autowired
     private ParchmentRepository parchmentRepository;
+
+    @Autowired
+    private WriterRepository writerRepository;
+
 
     public Parchment save(Parchment parchment, Long writerId, Long previousParchmentId) {
         if (writerId == null) {
@@ -66,7 +73,10 @@ public class ParchmentService {
 
     public Parchment findRandomCoreParchment() {
         try {
-            return parchmentRepository.findRandomCoreParchment().get();
+            Parchment parchment = parchmentRepository.findRandomCoreParchment().get();
+            Writer writer = writerRepository.findByParchmentId(parchment.getId()).get();
+            parchment.setWriter(writer);
+            return parchment;
         } catch (Exception e) {
             throw new RuntimeException(PARCHMENT_DOES_NOT_EXIST);
         }
