@@ -20,7 +20,7 @@ public class Parchment {
     @Transient
     private Integer voteCount;
     @Transient
-    private boolean readerVoted;
+    private boolean readerVoted = false;
 
     @JsonIgnore
     @Relationship(type = "CONTINUATION")

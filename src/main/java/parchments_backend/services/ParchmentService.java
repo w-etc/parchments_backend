@@ -2,6 +2,7 @@ package parchments_backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import parchments_backend.domain.BreadcrumbList;
@@ -103,8 +104,16 @@ public class ParchmentService {
         }
     }
 
+    public void cancelVoteParchment(Long writerId, Long parchmentId) {
+        try {
+            parchmentRepository.cancelVoteParchment(writerId, parchmentId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private boolean userIsAuthenticated() {
-        return SecurityContextHolder.getContext().getAuthentication() != null;
+        return !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken);
     }
 
     private void setVoteInformation(Parchment parchment) {

@@ -52,4 +52,7 @@ public interface ParchmentRepository extends Neo4jRepository<Parchment, Long> {
 
     @Query("MATCH (p:Parchment), (w:Writer) WHERE id(p) = $id AND id(w) = $readerId RETURN EXISTS( (w)-[:VOTED]->(p) )")
     boolean getReaderVoted(Long readerId, Long id);
+
+    @Query("MATCH (p:Parchment)<-[v:VOTED]-(w:Writer) WHERE id(p) = $parchmentId AND id(w) = $writerId DELETE v")
+    void cancelVoteParchment(Long writerId, Long parchmentId);
 }
