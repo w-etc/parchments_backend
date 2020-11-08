@@ -13,6 +13,7 @@ import parchments_backend.repositories.WriterRepository;
 import parchments_backend.wrappers.WriterUser;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ParchmentService {
@@ -46,7 +47,11 @@ public class ParchmentService {
     }
 
     public List<Parchment> findAllByTitle(String title) {
-        return parchmentRepository.findAllByTitle(title);
+        List<Long> parchmentIds = parchmentRepository.findAllIdsByTitle(title);
+        List<Parchment> parchments = parchmentRepository.findAllByIds(parchmentIds);
+        setVoteInformationForParchments(parchments);
+
+        return parchments;
     }
 
     public Parchment findById(Long id) {
@@ -121,6 +126,23 @@ public class ParchmentService {
         if (userIsAuthenticated()) {
             WriterUser reader = (WriterUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             parchment.setReaderVoted(parchmentRepository.getReaderVoted(reader.getId(), parchment.getId()));
+        }
+    }
+
+    private void setVoteInformationForParchments(List<Parchment> parchments) {
+        List<Long> parchmentIds = parchments.stream().map(Parchment::getId).collect(Collectors.toList());
+        List<Integer> voteCounts = parchmentRepository.getVoteCounts(parchmentIds);
+        if (userIsAuthenticated()) {
+            WriterUser reader = (WriterUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            List<Boolean> readerVotedForParchments = parchmentRepository.getReaderVotedForParchments(reader.getId(), parchmentIds);
+            for (int i = 0; i < parchments.size(); i++) {
+                parchments.get(i).setVoteCount(voteCounts.get(i));
+                parchments.get(i).setReaderVoted(readerVotedForParchments.get(i));
+            }
+        } else {
+            for (int i = 0; i < parchments.size(); i++) {
+                parchments.get(i).setVoteCount(voteCounts.get(i));
+            }
         }
     }
 }

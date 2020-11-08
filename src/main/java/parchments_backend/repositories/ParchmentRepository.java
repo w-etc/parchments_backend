@@ -21,8 +21,11 @@ public interface ParchmentRepository extends Neo4jRepository<Parchment, Long> {
     List<Parchment> findAllByWriterId(Long writerId);
 
     @Query("CALL db.index.fulltext.queryNodes(\"parchmentTitles\", $title + \"~\") YIELD node\n" +
-            "RETURN node")
-    List<Parchment> findAllByTitle(String title);
+            "RETURN id(node)")
+    List<Long> findAllIdsByTitle(String title);
+
+    @Query("MATCH (p:Parchment) WHERE id(p) IN $ids RETURN p")
+    List<Parchment> findAllByIds(List<Long> ids);
 
     @Query(value="MATCH (p:Parchment) WHERE NOT (p)<-[:CONTINUATION]-(:Parchment) RETURN p",
             countQuery = "MATCH (p:Parchment) WHERE NOT (p)<-[:CONTINUATION]-(:Parchment) RETURN count(p)")
@@ -50,8 +53,14 @@ public interface ParchmentRepository extends Neo4jRepository<Parchment, Long> {
     @Query("MATCH (p:Parchment)<-[v:VOTED]-(:Writer) WHERE id(p) = $parchmentId RETURN count(v)")
     Integer getVoteCount(Long parchmentId);
 
+    @Query("MATCH (p:Parchment) WHERE id(p) IN $ids WITH (p)<-[:VOTED]-(:Writer) as votes RETURN size(votes)")
+    List<Integer> getVoteCounts(List<Long> ids);
+
     @Query("MATCH (p:Parchment), (w:Writer) WHERE id(p) = $id AND id(w) = $readerId RETURN EXISTS( (w)-[:VOTED]->(p) )")
     boolean getReaderVoted(Long readerId, Long id);
+
+    @Query("MATCH (p:Parchment), (w:Writer) WHERE id(p) IN $ids AND id(w) = $readerId RETURN EXISTS( (w)-[:VOTED]->(p) )")
+    List<Boolean> getReaderVotedForParchments(Long readerId, List<Long> ids);
 
     @Query("MATCH (p:Parchment)<-[v:VOTED]-(w:Writer) WHERE id(p) = $parchmentId AND id(w) = $writerId DELETE v")
     void cancelVoteParchment(Long writerId, Long parchmentId);
