@@ -24,8 +24,11 @@ public interface ParchmentRepository extends Neo4jRepository<Parchment, Long> {
             "RETURN id(node)")
     List<Long> findAllIdsByTitle(String title);
 
-    @Query("MATCH (p:Parchment) WHERE id(p) IN $ids RETURN p")
-    List<Parchment> findAllByIds(List<Long> ids);
+    @Query("MATCH (p:Parchment) WHERE id(p) IN $ids WITH p AS parchment, (p)<-[:VOTED]-(:Writer) as votes ORDER BY size(votes) DESC RETURN parchment")
+    List<Parchment> findAllByMostVoted(List<Long> ids);
+
+    @Query("MATCH (p:Parchment) WHERE id(p) IN $ids RETURN p ORDER BY p.title")
+    List<Parchment> findAllByAlphabetic(List<Long> ids);
 
     @Query(value="MATCH (p:Parchment) WHERE NOT (p)<-[:CONTINUATION]-(:Parchment) RETURN p",
             countQuery = "MATCH (p:Parchment) WHERE NOT (p)<-[:CONTINUATION]-(:Parchment) RETURN count(p)")
@@ -53,14 +56,20 @@ public interface ParchmentRepository extends Neo4jRepository<Parchment, Long> {
     @Query("MATCH (p:Parchment)<-[v:VOTED]-(:Writer) WHERE id(p) = $parchmentId RETURN count(v)")
     Integer getVoteCount(Long parchmentId);
 
-    @Query("MATCH (p:Parchment) WHERE id(p) IN $ids WITH (p)<-[:VOTED]-(:Writer) as votes RETURN size(votes)")
-    List<Integer> getVoteCounts(List<Long> ids);
+    @Query("MATCH (p:Parchment) WHERE id(p) IN $ids WITH (p)<-[:VOTED]-(:Writer) as votes ORDER BY size(votes) DESC RETURN size(votes)")
+    List<Integer> getVoteCountsByMostVoted(List<Long> ids);
+
+    @Query("MATCH (p:Parchment) WHERE id(p) IN $ids WITH (p)<-[:VOTED]-(:Writer) as votes ORDER BY p.title RETURN size(votes)")
+    List<Integer> getVoteCountsByAlphabetic(List<Long> ids);
 
     @Query("MATCH (p:Parchment), (w:Writer) WHERE id(p) = $id AND id(w) = $readerId RETURN EXISTS( (w)-[:VOTED]->(p) )")
     boolean getReaderVoted(Long readerId, Long id);
 
-    @Query("MATCH (p:Parchment), (w:Writer) WHERE id(p) IN $ids AND id(w) = $readerId RETURN EXISTS( (w)-[:VOTED]->(p) )")
-    List<Boolean> getReaderVotedForParchments(Long readerId, List<Long> ids);
+    @Query("MATCH (p:Parchment), (w:Writer) WHERE id(p) IN $ids AND id(w) = $readerId WITH (p)<-[:VOTED]-(:Writer) as votes ORDER BY size(votes) DESC RETURN EXISTS( (w)-[:VOTED]->(p) )")
+    List<Boolean> getReaderVotedForParchmentsByMostVoted(Long readerId, List<Long> ids);
+
+    @Query("MATCH (p:Parchment), (w:Writer) WHERE id(p) IN $ids AND id(w) = $readerId RETURN EXISTS( (w)-[:VOTED]->(p) ) ORDER BY p.title")
+    List<Boolean> getReaderVotedForParchmentsByAlphabetic(Long readerId, List<Long> ids);
 
     @Query("MATCH (p:Parchment)<-[v:VOTED]-(w:Writer) WHERE id(p) = $parchmentId AND id(w) = $writerId DELETE v")
     void cancelVoteParchment(Long writerId, Long parchmentId);

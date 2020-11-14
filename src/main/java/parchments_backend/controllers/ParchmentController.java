@@ -40,9 +40,9 @@ public class ParchmentController {
         return parchmentService.findAllByWriterId(id);
     }
 
-    @GetMapping("/title/{title}")
-    public @ResponseBody List<Parchment> getParchmentsByTitle(@PathVariable String title) {
-        return parchmentService.findAllByTitle(title);
+    @GetMapping("/title/{title}/{sortingType}")
+    public @ResponseBody List<Parchment> getParchmentsByTitle(@PathVariable String title, @PathVariable String sortingType) {
+        return parchmentService.findAllByTitle(title, sortingType);
     }
 
     @GetMapping("/{id}")
