@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import parchments_backend.domain.BreadcrumbList;
 import parchments_backend.domain.Parchment;
+import parchments_backend.domain.ParchmentSorter;
 import parchments_backend.services.ParchmentService;
 import parchments_backend.wrappers.ParchmentPostData;
 import parchments_backend.wrappers.ParchmentResponseData;
@@ -40,8 +41,14 @@ public class ParchmentController {
         return parchmentService.findAllByWriterId(id);
     }
 
+    @GetMapping("/title/{title}")
+    public @ResponseBody List<Parchment> getParchmentsByTitle(@PathVariable String title) {
+        return parchmentService.findAllByTitle(title, ParchmentSorter.ALPHABETIC);
+    }
+
+
     @GetMapping("/title/{title}/{sortingType}")
-    public @ResponseBody List<Parchment> getParchmentsByTitle(@PathVariable String title, @PathVariable String sortingType) {
+    public @ResponseBody List<Parchment> getParchmentsByTitleAndSort(@PathVariable String title, @PathVariable String sortingType) {
         return parchmentService.findAllByTitle(title, sortingType);
     }
 
