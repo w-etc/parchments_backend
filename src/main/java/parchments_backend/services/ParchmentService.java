@@ -51,10 +51,8 @@ public class ParchmentService {
     public List<Parchment> findAllByTitle(String title, String sortingType) {
         ParchmentSorter sorter = ParchmentSorter.byType(sortingType, parchmentRepository);
         List<Long> parchmentIds = parchmentRepository.findAllIdsByTitle(title);
-        List<Parchment> parchments = sorter.findAllByIds(parchmentIds);
-        setVoteInformationForParchments(sorter, parchments);
 
-        return parchments;
+        return sorter.findAllByIds(parchmentIds);
     }
 
     public Parchment findById(Long id) {
@@ -96,9 +94,10 @@ public class ParchmentService {
         }
     }
 
-    public List<Parchment> findContinuationsById(Long id, Integer page) {
+    public List<Parchment> findContinuationsById(Long id, String sortingType, Integer page) {
         try {
-            return parchmentRepository.findContinuationsById(PageRequest.of(page, 5), id).getContent();
+            ParchmentSorter sorter = ParchmentSorter.byType(sortingType, parchmentRepository);
+            return sorter.findContinuationsById(PageRequest.of(page, 5), id).getContent();
         } catch (Exception e) {
             throw new RuntimeException(PARCHMENT_DOES_NOT_EXIST);
         }
@@ -129,23 +128,6 @@ public class ParchmentService {
         if (userIsAuthenticated()) {
             WriterUser reader = (WriterUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             parchment.setReaderVoted(parchmentRepository.getReaderVoted(reader.getId(), parchment.getId()));
-        }
-    }
-
-    private void setVoteInformationForParchments(ParchmentSorter sorter, List<Parchment> parchments) {
-        List<Long> parchmentIds = parchments.stream().map(Parchment::getId).collect(Collectors.toList());
-        List<Integer> voteCounts = sorter.getVoteCounts(parchmentIds);
-        if (userIsAuthenticated()) {
-            WriterUser reader = (WriterUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            List<Boolean> readerVotedForParchments = sorter.getReaderVotedForParchments(reader.getId(), parchmentIds);
-            for (int i = 0; i < parchments.size(); i++) {
-                parchments.get(i).setVoteCount(voteCounts.get(i));
-                parchments.get(i).setReaderVoted(readerVotedForParchments.get(i));
-            }
-        } else {
-            for (int i = 0; i < parchments.size(); i++) {
-                parchments.get(i).setVoteCount(voteCounts.get(i));
-            }
         }
     }
 }

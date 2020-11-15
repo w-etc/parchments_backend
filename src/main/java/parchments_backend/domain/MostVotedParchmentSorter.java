@@ -1,5 +1,7 @@
 package parchments_backend.domain;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import parchments_backend.repositories.ParchmentRepository;
 
 import java.util.List;
@@ -16,12 +18,7 @@ public class MostVotedParchmentSorter extends ParchmentSorter {
     }
 
     @Override
-    public List<Integer> getVoteCounts(List<Long> ids) {
-        return parchmentRepository.getVoteCountsByMostVoted(ids);
-    }
-
-    @Override
-    public List<Boolean> getReaderVotedForParchments(Long readerId, List<Long> ids) {
-        return parchmentRepository.getReaderVotedForParchmentsByMostVoted(readerId, ids);
+    public Page<Parchment> findContinuationsById(Pageable pageable, Long id) {
+        return parchmentRepository.findContinuationsByMostVoted(pageable, id);
     }
 }

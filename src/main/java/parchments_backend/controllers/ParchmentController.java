@@ -66,10 +66,10 @@ public class ParchmentController {
         }
     }
 
-    @GetMapping("/{id}/continuations")
-    public @ResponseBody ResponseEntity<Object> getContinuations(@PathVariable Long id, @RequestParam Integer page) {
+    @GetMapping("/{id}/continuations/{sortingType}")
+    public @ResponseBody ResponseEntity<Object> getContinuations(@PathVariable Long id, @PathVariable String sortingType, @RequestParam Integer page) {
         try {
-            List<Parchment> parchments = parchmentService.findContinuationsById(id, page);
+            List<Parchment> parchments = parchmentService.findContinuationsById(id, sortingType, page);
             return ResponseEntity.ok(parchments);
         } catch (Exception e) {
             if (e.getMessage().equals(ParchmentService.PARCHMENT_DOES_NOT_EXIST)) {

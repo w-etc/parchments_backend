@@ -1,5 +1,7 @@
 package parchments_backend.domain;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import parchments_backend.repositories.ParchmentRepository;
 
 import java.util.List;
@@ -22,7 +24,5 @@ public abstract class ParchmentSorter {
 
     public abstract List<Parchment> findAllByIds(List<Long> ids);
 
-    public abstract List<Integer> getVoteCounts(List<Long> ids);
-
-    public abstract List<Boolean> getReaderVotedForParchments(Long readerId, List<Long> ids);
+    public abstract Page<Parchment> findContinuationsById(Pageable pageable, Long id);
 }
