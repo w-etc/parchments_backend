@@ -27,7 +27,7 @@ public interface ParchmentRepository extends Neo4jRepository<Parchment, Long> {
     @Query("MATCH (p:Parchment) WHERE id(p) IN $ids WITH p AS parchment, (p)<-[:VOTED]-(:Writer) as votes ORDER BY size(votes) DESC RETURN parchment")
     List<Parchment> findAllByMostVoted(List<Long> ids);
 
-    @Query("MATCH (p:Parchment) WHERE id(p) IN $ids RETURN p ORDER BY p.title")
+    @Query("MATCH (p:Parchment) WHERE id(p) IN $ids RETURN p ORDER BY toLower(p.title)")
     List<Parchment> findAllByAlphabetic(List<Long> ids);
 
     @Query(value="MATCH (p:Parchment) WHERE NOT (p)<-[:CONTINUATION]-(:Parchment) WITH p AS parchment, apoc.util.md5([id(p), $seed]) as hash ORDER BY hash RETURN parchment",
@@ -46,7 +46,7 @@ public interface ParchmentRepository extends Neo4jRepository<Parchment, Long> {
 
     List<Parchment> findAll();
 
-    @Query(value="MATCH (pre:Parchment)-[:CONTINUATION]->(p:Parchment) WHERE id(pre) = $id RETURN p ORDER BY p.title",
+    @Query(value="MATCH (pre:Parchment)-[:CONTINUATION]->(p:Parchment) WHERE id(pre) = $id RETURN p ORDER BY toLower(p.title)",
             countQuery = "MATCH (pre:Parchment)-[:CONTINUATION]->(p:Parchment) WHERE id(pre) = $id RETURN count(p)")
     Page<Parchment> findContinuationsByAlphabetic(Pageable pageable, Long id);
 
