@@ -104,12 +104,11 @@ public class ParchmentRepositoryTest {
 
         assertThat(retrievedParchment).isNotPresent();
     }
-/*
-    TODO: Find out how to use APOC in tests
+
     @Test
     void brings_in_core_parchments_a_parchment_without_parent() {
         Parchment parchment = saveParchment("Title", writer, null);
-        Page<Parchment> parchments = parchmentRepository.findCoreParchments(PageRequest.of(0, 20), "");
+        Page<Parchment> parchments = parchmentRepository.findCoreParchments(PageRequest.of(0, 20));
 
         assertThat(parchments.getTotalElements()).isEqualTo(1);
         assertThat(parchments.getContent().get(0).getId()).isEqualTo(parchment.getId());
@@ -119,13 +118,13 @@ public class ParchmentRepositoryTest {
     void does_not_bring_in_core_parchments_a_parchment_with_parent() {
         Parchment coreParchment = saveParchment("Title", writer, null);
         Parchment parchment = saveParchment("Title", writer, coreParchment);
-        Page<Parchment> parchments = parchmentRepository.findCoreParchments(PageRequest.of(0, 20), "");
+        Page<Parchment> parchments = parchmentRepository.findCoreParchments(PageRequest.of(0, 20));
 
         assertThat(parchments.getTotalElements()).isEqualTo(1);
         assertThat(parchments.getContent().get(0).getId()).isNotEqualTo(parchment.getId());
         assertThat(parchments.getContent().get(0).getId()).isEqualTo(coreParchment.getId());
     }
-*/
+
     private Parchment saveParchment(String title, Writer writer, Parchment previousParchment) {
         Parchment parchment = new Parchment(title, "synopsis", "contents");
         if (previousParchment != null) {

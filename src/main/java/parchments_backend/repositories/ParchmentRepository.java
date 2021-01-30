@@ -30,9 +30,9 @@ public interface ParchmentRepository extends Neo4jRepository<Parchment, Long> {
     @Query("MATCH (p:Parchment) WHERE id(p) IN $ids RETURN p ORDER BY toLower(p.title)")
     List<Parchment> findAllByAlphabetic(List<Long> ids);
 
-    @Query(value="MATCH (p:Parchment) WHERE NOT (p)<-[:CONTINUATION]-(:Parchment) WITH p AS parchment, apoc.util.md5([id(p), $seed]) as hash ORDER BY hash RETURN parchment",
+    @Query(value="MATCH (p:Parchment) WHERE NOT (p)<-[:CONTINUATION]-(:Parchment) RETURN p",
             countQuery = "MATCH (p:Parchment) WHERE NOT (p)<-[:CONTINUATION]-(:Parchment) RETURN count(p)")
-    Page<Parchment> findCoreParchments(Pageable pageable, String seed);
+    Page<Parchment> findCoreParchments(Pageable pageable);
 
     @Query("MATCH (p:Parchment) WHERE NOT (p)<-[:CONTINUATION]-(:Parchment) RETURN p, rand() as r ORDER BY r LIMIT 1")
     Optional<Parchment> findRandomCoreParchment();

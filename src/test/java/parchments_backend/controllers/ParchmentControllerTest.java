@@ -136,17 +136,10 @@ public class ParchmentControllerTest {
 //                .andExpect(status().isBadRequest());
 //    }
 
-
-/*
-    TODO: Find out how to use APOC in tests
-    https://stackoverflow.com/questions/43965481/how-to-configure-neo4j-embedded-to-run-apoc-procedures
-    https://stackoverflow.com/questions/52032489/spring-dataneo4jtest-with-procedure-support
-    https://github.com/eugenp/tutorials/blob/master/persistence-modules/spring-data-neo4j/src/main/java/com/baeldung/spring/data/neo4j/config/MovieDatabaseNeo4jTestConfiguration.java
-
     @Test
     void get_core_parchments_brings_parchments_without_parent() throws Exception {
         Parchment parchment = getParchment();
-        mvc.perform(get("/parchment/core?page=0&seed=test"))
+        mvc.perform(get("/parchment/core?page=0"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id", comparesEqualTo(Math.toIntExact(parchment.getId()))));
@@ -158,13 +151,12 @@ public class ParchmentControllerTest {
         Writer writer = getWriter();
         Parchment parchment = parchmentRepository.save(new Parchment("Title", "Synopsis", "Contents"), writer.getId(), coreParchment.getId());
 
-        mvc.perform(get("/parchment/core?page=0&seed=test"))
+        mvc.perform(get("/parchment/core?page=0"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id", comparesEqualTo(Math.toIntExact(coreParchment.getId()))))
                 .andExpect(jsonPath("$[0].id", not(comparesEqualTo(Math.toIntExact(parchment.getId())))));
     }
-*/
 
     @Test
     void get_continuations_returns_the_continuations_of_a_parchment() throws Exception {

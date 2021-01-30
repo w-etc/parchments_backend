@@ -78,8 +78,8 @@ public class ParchmentService {
         }
     }
 
-    public List<Parchment> findCoreParchments(Integer page, String seed) {
-        return parchmentRepository.findCoreParchments(PageRequest.of(page, 5), seed).getContent();
+    public List<Parchment> findCoreParchments(Integer page) {
+        return parchmentRepository.findCoreParchments(PageRequest.of(page, 5)).getContent();
     }
 
     public Parchment findRandomCoreParchment() {
